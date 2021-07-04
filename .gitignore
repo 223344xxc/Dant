@@ -6,4 +6,5 @@ obj/*
 UserSetting/*
 Library/*
 *.csproj
-*/.DS_Store
+
+.DS_Store
