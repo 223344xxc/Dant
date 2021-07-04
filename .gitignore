@@ -1,0 +1,9 @@
+*.sln
+
+.vs/*
+Logs/*
+obj/*
+UserSetting/*
+Library/*
+*.csproj
+*/.DS_Store
