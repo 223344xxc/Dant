@@ -25,7 +25,7 @@ public class JoyStickCtrl : MonoBehaviour
 
     public static Vector3 JoyStickPosition;
 
-    public bool StickFollow = false;
+    public static bool StickFollow = false;
 
     Vector2 TargetPos;
     Vector2 StartStickPos;
@@ -56,19 +56,42 @@ public class JoyStickCtrl : MonoBehaviour
             //    ((Vector2)Input.mousePosition - StartStickPos).normalized * ((Vector2)Input.mousePosition - StartStickPos).magnitude :
             //    ((Vector2)Input.mousePosition - StartStickPos).normalized * MaxDistance;
             //transform.position = Vector3.SmoothDamp(transform.position, TargetPos + StartStickPos, ref movevel, StickSpeed);
-
-            TargetPos = (Input.GetTouch(0).position - StartStickPos).magnitude < MaxDistance ?
-                (Input.GetTouch(0).position - StartStickPos).normalized * (Input.GetTouch(0).position - StartStickPos).magnitude :
-                (Input.GetTouch(0).position - StartStickPos).normalized * MaxDistance;
-            transform.position = Vector3.SmoothDamp(transform.position, TargetPos + StartStickPos, ref movevel, StickSpeed);
-
-
+            if (Input.touchCount > 0)
+            {
+                TargetPos = (Input.GetTouch(0).position - StartStickPos).magnitude < MaxDistance ?
+                    (Input.GetTouch(0).position - StartStickPos).normalized * (Input.GetTouch(0).position - StartStickPos).magnitude :
+                    (Input.GetTouch(0).position - StartStickPos).normalized * MaxDistance;
+                transform.position = Vector3.SmoothDamp(transform.position, TargetPos + StartStickPos, ref movevel, StickSpeed);
+            }
 
         }
         else
         {
             transform.position = Vector3.SmoothDamp(transform.position, StartStickPos, ref movevel, StickSpeed);
         }
+        //조이스틱 pc 테스트
+        if (Input.GetKey(KeyCode.D))
+        {
+            transform.position = StartStickPos + new Vector2(100, 0);
+            StickFollow = true;
+        }
+        else if (Input.GetKey(KeyCode.A))
+        {
+            transform.position = StartStickPos + new Vector2(-100, 0);
+            StickFollow = true;
+        }
+        else if (Input.GetKey(KeyCode.W))
+        {
+            transform.position = StartStickPos + new Vector2(0, 100);
+            StickFollow = true;
+        }
+        else if (Input.GetKey(KeyCode.S))
+        {
+            transform.position = StartStickPos + new Vector2(0, -100);
+            StickFollow = true;
+        }
+        else
+            StickFollow = false;
 
         JoyStickPosition = transform.position - (Vector3)StartStickPos;
 
@@ -87,11 +110,11 @@ public class JoyStickCtrl : MonoBehaviour
         else
             StickDirection = JoyStickDirection.CENTER;
 
-        Debug.Log(StickDirection);
+        //Debug.Log(StickDirection);
     }
 
-    public void ChangeSitckFollow(bool StickFollow)
+    public void ChangeSitckFollow(bool stickFollow)
     {
-        this.StickFollow = StickFollow;
+        StickFollow = stickFollow;
     }
 }

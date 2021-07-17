@@ -260,7 +260,7 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 619316173}
+        - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: PlayerCtrl, Assembly-CSharp
           m_MethodName: Jump
           m_Mode: 1
@@ -367,7 +367,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ComboText: {fileID: 51138931}
   BackComboText: {fileID: 1062143263}
-  player: {fileID: 619316173}
+  player: {fileID: 0}
 --- !u!1 &118252558
 GameObject:
   m_ObjectHideFlags: 0
@@ -587,7 +587,7 @@ Transform:
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &149820526
 GameObject:
@@ -941,7 +941,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &358437485
 GameObject:
@@ -1080,7 +1080,7 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 619316173}
+        - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: PlayerCtrl, Assembly-CSharp
           m_MethodName: Attack_
           m_Mode: 1
@@ -1432,7 +1432,7 @@ RectTransform:
   - {fileID: 51138930}
   - {fileID: 513677447}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1579,7 +1579,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &513677447
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1753,6 +1753,7 @@ MonoBehaviour:
   hp: 30
   PowerX: 3000
   PowerY: 1000
+  TopAttackEffect: {fileID: 0}
   Gravity: 10
   Speed: 5
   IsMove: 1
@@ -1823,7 +1824,7 @@ Transform:
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &561784975
 GameObject:
@@ -2055,9 +2056,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 619316172}
+  - component: {fileID: 619316173}
   - component: {fileID: 619316171}
   - component: {fileID: 619316169}
-  - component: {fileID: 619316173}
   - component: {fileID: 619316174}
   - component: {fileID: 619316170}
   m_Layer: 8
@@ -2167,7 +2168,7 @@ Transform:
   - {fileID: 596188563}
   - {fileID: 1145815362}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &619316173
 MonoBehaviour:
@@ -2181,19 +2182,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea855cb86ff85484bb67c03d827212fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Gravity: 0
-  Speed: 4
-  JumpPower: 2.5
-  IsMove: 1
-  IsAttack: 0
-  NextAttackAccept: 0
-  IsGround: 0
+  AttackDamage: 0
+  Defense: 0
+  MoveSpeed: 2
+  JumpPower: 2500
   IsJump: 0
-  TopAttackEffectPrefab: {fileID: 8806996223107017625, guid: 503b37bdeb06e9646bc2766ac9d56ddb, type: 3}
-  attackArea:
-  - {fileID: 596188562}
-  - {fileID: 1145815361}
-  MoveDir: {x: 0, y: 0, z: 0}
+  IsAttack: 0
+  TopAttackEffect: {fileID: 8806996223107017625, guid: 503b37bdeb06e9646bc2766ac9d56ddb, type: 3}
 --- !u!50 &619316174
 Rigidbody2D:
   serializedVersion: 4
@@ -2334,6 +2329,7 @@ MonoBehaviour:
   hp: 30
   PowerX: 3000
   PowerY: 1000
+  TopAttackEffect: {fileID: 0}
   Gravity: 10
   Speed: 5
   IsMove: 1
@@ -2430,7 +2426,7 @@ Transform:
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &676676468
 Rigidbody2D:
@@ -2619,7 +2615,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!1 &812354683
 GameObject:
@@ -3160,6 +3156,63 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1001 &916147239
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 8806996223107017624, guid: 503b37bdeb06e9646bc2766ac9d56ddb, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.90443814
+      objectReference: {fileID: 0}
+    - target: {fileID: 8806996223107017624, guid: 503b37bdeb06e9646bc2766ac9d56ddb, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.089961
+      objectReference: {fileID: 0}
+    - target: {fileID: 8806996223107017624, guid: 503b37bdeb06e9646bc2766ac9d56ddb, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8806996223107017624, guid: 503b37bdeb06e9646bc2766ac9d56ddb, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8806996223107017624, guid: 503b37bdeb06e9646bc2766ac9d56ddb, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8806996223107017624, guid: 503b37bdeb06e9646bc2766ac9d56ddb, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8806996223107017624, guid: 503b37bdeb06e9646bc2766ac9d56ddb, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8806996223107017624, guid: 503b37bdeb06e9646bc2766ac9d56ddb, type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8806996223107017624, guid: 503b37bdeb06e9646bc2766ac9d56ddb, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8806996223107017624, guid: 503b37bdeb06e9646bc2766ac9d56ddb, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8806996223107017624, guid: 503b37bdeb06e9646bc2766ac9d56ddb, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8806996223107017625, guid: 503b37bdeb06e9646bc2766ac9d56ddb, type: 3}
+      propertyPath: m_Name
+      value: TopAttackPrefab
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 503b37bdeb06e9646bc2766ac9d56ddb, type: 3}
 --- !u!1 &920979639
 GameObject:
   m_ObjectHideFlags: 0
@@ -3566,6 +3619,7 @@ MonoBehaviour:
   hp: 30
   PowerX: 3000
   PowerY: 1000
+  TopAttackEffect: {fileID: 0}
   Gravity: 10
   Speed: 5
   IsMove: 1
@@ -3636,7 +3690,7 @@ Transform:
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &997846021
 GameObject:
@@ -3905,6 +3959,7 @@ MonoBehaviour:
   hp: 30
   PowerX: 3000
   PowerY: 1000
+  TopAttackEffect: {fileID: 0}
   Gravity: 10
   Speed: 5
   IsMove: 1
@@ -3975,7 +4030,7 @@ Transform:
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1050039445
 GameObject:
@@ -4759,6 +4814,7 @@ MonoBehaviour:
   hp: 30
   PowerX: 3000
   PowerY: 1000
+  TopAttackEffect: {fileID: 0}
   Gravity: 10
   Speed: 5
   IsMove: 1
@@ -4829,7 +4885,7 @@ Transform:
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1211584991
 GameObject:
@@ -5074,7 +5130,7 @@ GameObject:
   - component: {fileID: 1481690073}
   m_Layer: 0
   m_Name: Collider
-  m_TagString: Untagged
+  m_TagString: GROUND
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5517,6 +5573,7 @@ MonoBehaviour:
   hp: 30
   PowerX: 3000
   PowerY: 1000
+  TopAttackEffect: {fileID: 0}
   Gravity: 10
   Speed: 5
   IsMove: 1
@@ -5587,7 +5644,7 @@ Transform:
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1681948569
 GameObject:
@@ -5783,7 +5840,7 @@ Transform:
   - {fileID: 1686087885}
   - {fileID: 1709841715}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1781273209
 GameObject:
@@ -5997,7 +6054,6 @@ MonoBehaviour:
   SelectDirectionDistance: 30
   JoyStickBase: {fileID: 1492100847}
   StickSpeed: 0.1
-  StickFollow: 0
 --- !u!114 &1832361844
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6228,6 +6284,7 @@ MonoBehaviour:
   hp: 30
   PowerX: 3000
   PowerY: 1000
+  TopAttackEffect: {fileID: 0}
   Gravity: 10
   Speed: 5
   IsMove: 1
@@ -6298,7 +6355,7 @@ Transform:
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 12
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2095292169
 GameObject:
@@ -6606,7 +6663,7 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 619316173}
+        - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: PlayerCtrl, Assembly-CSharp
           m_MethodName: Dash
           m_Mode: 1

@@ -10,16 +10,14 @@ public class CameraMove : MonoBehaviour
     public Vector3 TargetPos;
     public Vector3 Offset;
     Vector3 vel;
-    void Start()
+   
+
+    private void LateUpdate()
     {
-        
-    }
-    private void FixedUpdate()
-    {
+
         TargetPos = Target.transform.position;
         TargetPos.y = 0;
         gameObject.transform.position = Vector3.SmoothDamp(transform.position, TargetPos + Offset, ref vel, CamMoveTime);
-       
 
     }
 

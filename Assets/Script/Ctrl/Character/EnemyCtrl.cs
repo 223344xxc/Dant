@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+
 public class EnemyCtrl : MonoBehaviour
 {
     Rigidbody2D rigidbody;
@@ -14,6 +16,7 @@ public class EnemyCtrl : MonoBehaviour
     public float hp;
 
     public float PowerX, PowerY;
+
 
     public float Hp
     {
@@ -136,8 +139,8 @@ public class EnemyCtrl : MonoBehaviour
             Destroy(Instantiate(DeathEffectPrefab, transform), 1);
             Destroy(gameObject, 3);
         }
-        PlayerCtrl.ComboResetTime = PlayerCtrl.ResetTime;
-        PlayerCtrl.CurrentCombo += 1;
+        ///PlayerCtrl.ComboResetTime = PlayerCtrl.ResetTime;
+       /// PlayerCtrl.CurrentCombo += 1;
     }
 
     public void AddForceToUp()
@@ -164,7 +167,7 @@ public class EnemyCtrl : MonoBehaviour
         }
         if (collision.gameObject.CompareTag("ATTACKAREA"))
         {
-            PlayerCtrl.attack += Damaged;
+            ///PlayerCtrl.attack += Damaged;
         }
     }
 
@@ -172,7 +175,7 @@ public class EnemyCtrl : MonoBehaviour
     {
         if (collision.CompareTag("ATTACKAREA"))
         {
-            PlayerCtrl.attack += Damaged;
+            ///PlayerCtrl.attack += Damaged;
         }
     }
 
@@ -184,7 +187,7 @@ public class EnemyCtrl : MonoBehaviour
         }
         if (collision.gameObject.CompareTag("ATTACKAREA"))
         {
-            PlayerCtrl.attack -= Damaged;
+            ///PlayerCtrl.attack -= Damaged;
         }
     }
 
@@ -192,7 +195,7 @@ public class EnemyCtrl : MonoBehaviour
     {
         if (collision.CompareTag("ATTACKAREA"))
         {
-            PlayerCtrl.attack -= Damaged;
+           /// PlayerCtrl.attack -= Damaged;
         }
     }
 

@@ -16,15 +16,15 @@ public class ComboTextCtrl : MonoBehaviour
 
     void Update()
     {
-        if (PlayerCtrl.CurrentCombo > 0)
-        {
-            ComboText.text = PlayerCtrl.CurrentCombo + " Combo";
-            BackComboText.text = PlayerCtrl.CurrentCombo + " Combo";
-        }
-        else
-        {
-            ComboText.text = "";
-            BackComboText.text = "";
-        }
+        //if (PlayerCtrl.CurrentCombo > 0)
+        //{
+        //    ///ComboText.text = PlayerCtrl.CurrentCombo + " Combo";
+        //    ///BackComboText.text = PlayerCtrl.CurrentCombo + " Combo";
+        //}
+        //else
+        //{
+        //    ComboText.text = "";
+        //    BackComboText.text = "";
+        //}
     }
 }
