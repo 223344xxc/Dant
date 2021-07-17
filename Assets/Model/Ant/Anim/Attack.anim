@@ -100,6 +100,13 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
+  - time: 0
+    functionName: SetAttack
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
   - time: 0.083333336
     functionName: ActiveAttackArea
     data: 
@@ -130,6 +137,13 @@ AnimationClip:
     messageOptions: 0
   - time: 0.51666665
     functionName: MoveRelease
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.51666665
+    functionName: AttackRelease
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

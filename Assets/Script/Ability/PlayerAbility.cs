@@ -20,4 +20,19 @@ public class PlayerAbility : Ability
         }
     }
 
+    [Tooltip("대쉬 속도")]
+    [SerializeField]
+    private float DashSpeed;
+
+    public float DS
+    {
+        get
+        {
+            return DashSpeed;
+        }
+        set
+        {
+            DashSpeed = value;
+        }
+    }
 }

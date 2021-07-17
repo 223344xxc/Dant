@@ -16,20 +16,29 @@ public class PlayerCtrl : PlayerAbility
 
     public bool IsJump = false;
     public bool IsAttack = false;
+    public bool IsDash = false;
+    private float DashDistance = 0;
     private bool PassibleMove = true;
+    private bool IsJumpTopAttack = false;
 
     private Vector2 MoveVector;
     public Vector2 MoveVec
     {
         get
         {
+            if (IsDash)
+            {
+                MoveVector.Set(DashDistance * Speed * DS, rigid.velocity.y);
+                return MoveVector;
+            }
+
             if (PassibleMove)
                 MoveVector.Set(IsJump ? rigid.velocity.x : JoyStickCtrl.JoyStickPosition.x * Speed, rigid.velocity.y);
             else
                 MoveVector.Set(IsJump ? rigid.velocity.x : 0, rigid.velocity.y);
-
             if (Mathf.Abs(JoyStickCtrl.JoyStickPosition.x) > 3)
                 TempScale.Set(JoyStickCtrl.JoyStickPosition.x > 0 ? -1 * StartScale.x : 1 * StartScale.x, StartScale.y, StartScale.z);
+
             return MoveVector;
         }
     }
@@ -55,8 +64,6 @@ public class PlayerCtrl : PlayerAbility
     }
 
 
-
-
     public GameObject TopAttackEffect;
 
     private Vector3 DumyVector;
@@ -65,6 +72,11 @@ public class PlayerCtrl : PlayerAbility
     {
         base.Start();
         InitPlayer();
+    }
+    public override void Update()
+    {
+        base.Update();
+        PlayerMove();
     }
 
     void InitPlayer()
@@ -75,16 +87,11 @@ public class PlayerCtrl : PlayerAbility
         TempScale = StartScale;
     }
 
-    public override void Update()
-    {
-        base.Update();
-        PlayerMove();
-    }
-
     void PlayerMove()
     {
         rigid.velocity = MoveVec;
         transform.localScale = MoveScale;
+
 
         if (Input.GetKeyDown(KeyCode.Space) && !IsJump)
         {
@@ -94,8 +101,12 @@ public class PlayerCtrl : PlayerAbility
         {
             Attack();
         }
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            Dash();
+        }
 
-        if(JoyStickCtrl.StickFollow && Mathf.Abs(JoyStickCtrl.JoyStickPosition.x) > 3)
+        if (JoyStickCtrl.StickFollow && Mathf.Abs(JoyStickCtrl.JoyStickPosition.x) > 3)
         {
             anim.SetBool("IsMove", true);
         }
@@ -109,6 +120,7 @@ public class PlayerCtrl : PlayerAbility
     {
         if (collision.transform.CompareTag("GROUND"))
         {
+            IsJumpTopAttack = false;
             IsJump = false;
         }
     }
@@ -134,11 +146,15 @@ public class PlayerCtrl : PlayerAbility
 
     void NormalAttack()
     {
+        if (IsAttack)
+            return;
         anim.Play("Attack_1");
     }
 
     void TopAttack()
     {
+        if (IsAttack)
+            return;
         GameObject Effect = Instantiate(TopAttackEffect);
         Effect.transform.position = transform.position;
         DumyVector.Set(transform.localScale.x < 0 ? -1 * Effect.transform.localScale.x : 1 * Effect.transform.localScale.x, Effect.transform.localScale.y, Effect.transform.localScale.z);
@@ -151,13 +167,21 @@ public class PlayerCtrl : PlayerAbility
 
     void JumpBottomAttack()
     {
+        if (IsAttack)
+            return;
+
+
         anim.Play("JumpBottomAttack");
     }
 
     void JumpTopAttack()
     {
+        if (IsAttack || IsJumpTopAttack)
+            return;
+        IsJumpTopAttack = true;
         rigid.AddForce(Vector2.up * 2000);
         anim.Play("JumpTopAttack");
+
     }
 
     void SkillGrap()
@@ -167,7 +191,32 @@ public class PlayerCtrl : PlayerAbility
 
     void Dash()
     {
-        anim.Play("Dash");
+        if (!IsDash && PassibleMove)
+            anim.Play("Dash");
+    }
+
+    public void StartDash()
+    {
+        DashDistance = transform.localScale.x > 0 ? -1 : 1;
+        PassibleMove = false;
+        IsDash = true;
+    }
+
+    public void EndDash()
+    {
+        DashDistance = 0;
+        PassibleMove = true;
+        IsDash = false;
+    }
+
+    public void SetAttack()
+    {
+        IsAttack = true;
+    }
+
+    public void AttackRelease()
+    {
+        IsAttack = false;
     }
 
     public void MoveStop()
