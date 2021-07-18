@@ -11,6 +11,9 @@ public enum AttackType
 
 public class PlayerCtrl : PlayerAbility
 {
+    //안하늘 씹련
+
+
     private Rigidbody2D rigid;
     private Animator anim;
 
