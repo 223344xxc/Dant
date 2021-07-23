@@ -6,55 +6,29 @@ public class Ability : MonoBehaviour
 {
     [SerializeField]
     [Header("능력치")]
-    [Tooltip("공격력")]
-    private float AttackDamage;
+    private float attackDamage; //공격력
 
-    public float AD
+    public float AttackDamage
     {
-        get
-        {
-            return AttackDamage;
-        }
-        set
-        {
-            AttackDamage = value;
-        }
+        get => attackDamage;
+        set => attackDamage = value;
     }
 
     [SerializeField]
-    [Tooltip("방어력")]
-    private float Defense;
+    private float defense; //방어력
 
-    public float DF
+    public float Defense
     {
-        get
-        {
-            return Defense;
-        }
-        set
-        {
-            Defense = value;
-        }
+        get => defense;
+        set => defense = value;
     }
 
     [SerializeField]
-    [Tooltip("이동속도")]
-    private float MoveSpeed;
+    private float moveSpeed; //이동속도
 
-    public float Speed
+    public float MoveSpeed
     {
-        get
-        {
-            return MoveSpeed * 0.1f;
-        }
-        set
-        {
-            MoveSpeed = value;
-        }
+        get => moveSpeed * 0.1f;
+        set => moveSpeed = value;
     }
-
-
-    public virtual void Start() { }
-
-    public virtual void Update() { }
 }

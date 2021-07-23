@@ -2181,14 +2181,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea855cb86ff85484bb67c03d827212fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AttackDamage: 0
-  Defense: 0
-  MoveSpeed: 1.5
-  JumpPower: 2500
-  DashSpeed: 300
-  IsJump: 0
-  IsAttack: 0
-  IsDash: 0
+  attackDamage: 0
+  defense: 0
+  moveSpeed: 3
+  jumpPower: 2000
+  dashSpeed: 0
   TopAttackEffect: {fileID: 8806996223107017625, guid: 503b37bdeb06e9646bc2766ac9d56ddb, type: 3}
 --- !u!50 &619316174
 Rigidbody2D:

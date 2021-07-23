@@ -11,38 +11,38 @@ public enum AttackType
 
 public class PlayerCtrl : PlayerAbility
 {
-    //안하늘 씹련
-
+    public GameObject TopAttackEffect;
 
     private Rigidbody2D rigid;
     private Animator anim;
 
-    public bool IsJump = false;
-    public bool IsAttack = false;
-    public bool IsDash = false;
+    private bool IsJump = false;
+    private bool IsAttack = false;
+    private bool IsDash = false;
+
     private float DashDistance = 0;
     private bool PassibleMove = true;
     private bool IsJumpTopAttack = false;
 
-    private Vector2 MoveVector;
-    public Vector2 MoveVec
+    private Vector2 moveVector;
+    public Vector2 MoveVector
     {
         get
         {
             if (IsDash)
             {
-                MoveVector.Set(DashDistance * Speed * DS, rigid.velocity.y);
-                return MoveVector;
+                moveVector.Set(DashDistance * MoveSpeed * DashSpeed, rigid.velocity.y);
+                return moveVector;
             }
 
             if (PassibleMove)
-                MoveVector.Set(IsJump ? rigid.velocity.x : JoyStickCtrl.JoyStickPosition.x * Speed, rigid.velocity.y);
+                moveVector.Set(IsJump ? rigid.velocity.x : JoyStickCtrl.JoyStickPosition.x * MoveSpeed, rigid.velocity.y);
             else
-                MoveVector.Set(IsJump ? rigid.velocity.x : 0, rigid.velocity.y);
+                moveVector.Set(IsJump ? rigid.velocity.x : 0, rigid.velocity.y);
             if (Mathf.Abs(JoyStickCtrl.JoyStickPosition.x) > 3)
                 TempScale.Set(JoyStickCtrl.JoyStickPosition.x > 0 ? -1 * StartScale.x : 1 * StartScale.x, StartScale.y, StartScale.z);
 
-            return MoveVector;
+            return moveVector;
         }
     }
 
@@ -50,10 +50,7 @@ public class PlayerCtrl : PlayerAbility
     private Vector3 TempScale;
     public Vector3 MoveScale
     {
-        get
-        {
-            return TempScale;
-        }
+        get => TempScale;
     }
 
     private Vector2 JumpVelocity;
@@ -61,28 +58,23 @@ public class PlayerCtrl : PlayerAbility
     {
         get
         {
-            JumpVelocity.Set(0, JP);
+            JumpVelocity.Set(0, JumpPower);
             return JumpVelocity;
         }
     }
 
-
-    public GameObject TopAttackEffect;
-
     private Vector3 DumyVector;
 
-    public override void Start()
+    public void Awake()
     {
-        base.Start();
         InitPlayer();
     }
-    public override void Update()
+    public void Update()
     {
-        base.Update();
         PlayerMove();
     }
 
-    void InitPlayer()
+    private void InitPlayer()
     {
         rigid = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
@@ -90,9 +82,9 @@ public class PlayerCtrl : PlayerAbility
         TempScale = StartScale;
     }
 
-    void PlayerMove()
+    private void PlayerMove()
     {
-        rigid.velocity = MoveVec;
+        rigid.velocity = MoveVector;
         transform.localScale = MoveScale;
 
 
@@ -129,14 +121,17 @@ public class PlayerCtrl : PlayerAbility
     }
 
 
-    void Jump()
+    private void Jump()
     {
         rigid.AddForce(JumpVector);
         IsJump = true;
     }
 
-    void Attack()
+    private void Attack()
     {
+        if (IsAttack)
+            return;
+
         if (JoyStickCtrl.StickDirection == JoyStickDirection.UP && IsJump == false)
             TopAttack();
         else if (JoyStickCtrl.StickDirection == JoyStickDirection.UP && IsJump == true)
@@ -147,39 +142,30 @@ public class PlayerCtrl : PlayerAbility
             NormalAttack();
     }
 
-    void NormalAttack()
+    private void NormalAttack()
     {
-        if (IsAttack)
-            return;
         anim.Play("Attack_1");
     }
 
-    void TopAttack()
+    private void TopAttack()
     {
-        if (IsAttack)
-            return;
         GameObject Effect = Instantiate(TopAttackEffect);
         Effect.transform.position = transform.position;
         DumyVector.Set(transform.localScale.x < 0 ? -1 * Effect.transform.localScale.x : 1 * Effect.transform.localScale.x, Effect.transform.localScale.y, Effect.transform.localScale.z);
         Effect.transform.localScale = DumyVector;
-        
         IsJump = true;
         anim.Play("TopAttack");
         rigid.AddForce(Vector2.up * 2000);
     }
 
-    void JumpBottomAttack()
+    private void JumpBottomAttack()
     {
-        if (IsAttack)
-            return;
-
-
         anim.Play("JumpBottomAttack");
     }
 
-    void JumpTopAttack()
+    private void JumpTopAttack()
     {
-        if (IsAttack || IsJumpTopAttack)
+        if (IsJumpTopAttack)
             return;
         IsJumpTopAttack = true;
         rigid.AddForce(Vector2.up * 2000);
@@ -187,12 +173,12 @@ public class PlayerCtrl : PlayerAbility
 
     }
 
-    void SkillGrap()
+    private void SkillGrap()
     {
         anim.Play("Attack_Grap");
     }
 
-    void Dash()
+    private void Dash()
     {
         if (!IsDash && PassibleMove)
             anim.Play("Dash");
