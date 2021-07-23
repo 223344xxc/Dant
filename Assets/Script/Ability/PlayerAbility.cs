@@ -7,32 +7,20 @@ public class PlayerAbility : Ability
     [Header("플래이어 능력치")]
     [Tooltip("점프력")]
     [SerializeField]
-    private float JumpPower;
-    public float JP
+    private float jumpPower;
+    public float JumpPower
     {
-        get
-        {
-            return JumpPower;
-        }
-        set
-        {
-            JumpPower = value;
-        }
+        get => jumpPower;
+        set => jumpPower = value;
     }
 
     [Tooltip("대쉬 속도")]
     [SerializeField]
-    private float DashSpeed;
+    private float dashSpeed;
 
-    public float DS
+    public float DashSpeed
     {
-        get
-        {
-            return DashSpeed;
-        }
-        set
-        {
-            DashSpeed = value;
-        }
+        get => dashSpeed;
+        set => dashSpeed = value;
     }
 }
