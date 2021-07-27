@@ -2005,7 +2005,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &596188563
 Transform:
   m_ObjectHideFlags: 0
@@ -2187,6 +2187,11 @@ MonoBehaviour:
   jumpPower: 2000
   dashSpeed: 0
   TopAttackEffect: {fileID: 8806996223107017625, guid: 503b37bdeb06e9646bc2766ac9d56ddb, type: 3}
+  AttackColliders:
+  - {fileID: 0}
+  - {fileID: 596188562}
+  - {fileID: 1145815361}
+  NowAttackType: 0
 --- !u!50 &619316174
 Rigidbody2D:
   serializedVersion: 4
@@ -4608,7 +4613,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1145815362
 Transform:
   m_ObjectHideFlags: 0
@@ -6409,7 +6414,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.34212282, y: 0.11933334}
   m_AnchorMax: {x: 0.47587723, y: 0.40140745}
-  m_AnchoredPosition: {x: -0.5, y: 3.0000763}
+  m_AnchoredPosition: {x: -0.5, y: 3.0000687}
   m_SizeDelta: {x: -205, y: -204}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2101850792
