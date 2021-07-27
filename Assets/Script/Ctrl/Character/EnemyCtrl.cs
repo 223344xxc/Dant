@@ -137,6 +137,7 @@ public class EnemyCtrl : MonoBehaviour
         else
         {
             Destroy(Instantiate(DeathEffectPrefab, transform), 1);
+            PlayerCtrl.AttackHitObject -= Damaged;
             Destroy(gameObject, 3);
         }
         ///PlayerCtrl.ComboResetTime = PlayerCtrl.ResetTime;
@@ -167,7 +168,7 @@ public class EnemyCtrl : MonoBehaviour
         }
         if (collision.gameObject.CompareTag("ATTACKAREA"))
         {
-            ///PlayerCtrl.attack += Damaged;
+            PlayerCtrl.AttackHitObject += Damaged;
         }
     }
 
@@ -175,7 +176,7 @@ public class EnemyCtrl : MonoBehaviour
     {
         if (collision.CompareTag("ATTACKAREA"))
         {
-            ///PlayerCtrl.attack += Damaged;
+            PlayerCtrl.AttackHitObject += Damaged;
         }
     }
 
@@ -187,7 +188,7 @@ public class EnemyCtrl : MonoBehaviour
         }
         if (collision.gameObject.CompareTag("ATTACKAREA"))
         {
-            ///PlayerCtrl.attack -= Damaged;
+            PlayerCtrl.AttackHitObject -= Damaged;
         }
     }
 
@@ -195,7 +196,7 @@ public class EnemyCtrl : MonoBehaviour
     {
         if (collision.CompareTag("ATTACKAREA"))
         {
-           /// PlayerCtrl.attack -= Damaged;
+            PlayerCtrl.AttackHitObject -= Damaged;
         }
     }
 

@@ -7,11 +7,21 @@ public enum AttackType
     None,
     NormalAttack,
     TopAttack,
+    JumpTopAttack,
+    JumpBottonAttack
+}
+
+public enum AttackCollider
+{
+    None,
+    NormalAttack,
+    TopAttack
 }
 
 public class PlayerCtrl : PlayerAbility
 {
     public GameObject TopAttackEffect;
+    public GameObject[] AttackColliders;
 
     private Rigidbody2D rigid;
     private Animator anim;
@@ -65,6 +75,11 @@ public class PlayerCtrl : PlayerAbility
 
     private Vector3 DumyVector;
 
+    public delegate void AttackToObject(float Damage, Vector3 PlayerPos);
+    public static AttackToObject AttackHitObject;
+
+    public AttackType NowAttackType;
+
     public void Awake()
     {
         InitPlayer();
@@ -74,12 +89,15 @@ public class PlayerCtrl : PlayerAbility
         PlayerMove();
     }
 
+    private void Temp(float num, Vector3 vec) { }
+
     private void InitPlayer()
     {
         rigid = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         StartScale = transform.localScale;
         TempScale = StartScale;
+        AttackHitObject += Temp;
     }
 
     private void PlayerMove()
@@ -144,6 +162,7 @@ public class PlayerCtrl : PlayerAbility
 
     private void NormalAttack()
     {
+        NowAttackType = AttackType.NormalAttack;
         anim.Play("Attack_1");
     }
 
@@ -216,5 +235,15 @@ public class PlayerCtrl : PlayerAbility
     public void MoveRelease()
     {
         PassibleMove = true;
+    }
+
+    public void ActiveAttackArea()
+    {
+        AttackColliders[(int)NowAttackType].SetActive(!AttackColliders[(int)NowAttackType].activeSelf);
+    }
+
+    public void AttackToHitObject()
+    {
+        AttackHitObject(1, transform.position);
     }
 }
