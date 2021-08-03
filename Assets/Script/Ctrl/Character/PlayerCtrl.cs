@@ -42,6 +42,7 @@ public class PlayerCtrl : PlayerAbility
             if (IsDash)
             {
                 moveVector.Set(DashDistance * MoveSpeed * DashSpeed, rigid.velocity.y);
+                Debug.Log(DashDistance * MoveSpeed * DashSpeed);
                 return moveVector;
             }
 
@@ -79,6 +80,7 @@ public class PlayerCtrl : PlayerAbility
     public static AttackToObject AttackHitObject;
 
     public AttackType NowAttackType;
+    private void Temp(float num, Vector3 vec) { }
 
     public void Awake()
     {
@@ -88,9 +90,10 @@ public class PlayerCtrl : PlayerAbility
     {
         PlayerMove();
     }
-
-    private void Temp(float num, Vector3 vec) { }
-
+    private void FixedUpdate()
+    {
+        rigid.velocity = MoveVector;
+    }
     private void InitPlayer()
     {
         rigid = GetComponent<Rigidbody2D>();
@@ -99,11 +102,10 @@ public class PlayerCtrl : PlayerAbility
         TempScale = StartScale;
         AttackHitObject += Temp;
     }
-
     private void PlayerMove()
     {
-        rigid.velocity = MoveVector;
-        transform.localScale = MoveScale;
+        if (!IsAttack)
+            transform.localScale = MoveScale;
 
 
         if (Input.GetKeyDown(KeyCode.Space) && !IsJump)
@@ -113,6 +115,14 @@ public class PlayerCtrl : PlayerAbility
         if (Input.GetMouseButtonDown(0))
         {
             Attack();
+        }
+        if(Input.GetMouseButtonDown(1))
+        {
+            Skill();
+        }
+        if(Input.GetKeyDown(KeyCode.E))
+        {
+            Ultimate();
         }
         if (Input.GetKeyDown(KeyCode.R))
         {
@@ -138,7 +148,7 @@ public class PlayerCtrl : PlayerAbility
         }
     }
 
-
+    #region 버튼 함수들
     private void Jump()
     {
         rigid.AddForce(JumpVector);
@@ -147,7 +157,7 @@ public class PlayerCtrl : PlayerAbility
 
     private void Attack()
     {
-        if (IsAttack)
+        if (IsAttack || IsDash)
             return;
 
         if (JoyStickCtrl.StickDirection == JoyStickDirection.UP && IsJump == false)
@@ -160,6 +170,25 @@ public class PlayerCtrl : PlayerAbility
             NormalAttack();
     }
 
+    private void Skill()
+    {
+        if (IsAttack || IsDash)
+            return;
+
+        if (JoyStickCtrl.StickDirection == JoyStickDirection.DOWN && IsJump == false)
+            SkillGrap();
+    }
+
+    private void Ultimate()
+    {
+        if (IsAttack || IsDash)
+            return;
+
+        anim.Play("Ultimate");
+    }
+    #endregion
+
+    #region 코드에서 불리는 함수들
     private void NormalAttack()
     {
         NowAttackType = AttackType.NormalAttack;
@@ -169,6 +198,7 @@ public class PlayerCtrl : PlayerAbility
     private void TopAttack()
     {
         GameObject Effect = Instantiate(TopAttackEffect);
+        NowAttackType = AttackType.TopAttack;
         Effect.transform.position = transform.position;
         DumyVector.Set(transform.localScale.x < 0 ? -1 * Effect.transform.localScale.x : 1 * Effect.transform.localScale.x, Effect.transform.localScale.y, Effect.transform.localScale.z);
         Effect.transform.localScale = DumyVector;
@@ -202,7 +232,9 @@ public class PlayerCtrl : PlayerAbility
         if (!IsDash && PassibleMove)
             anim.Play("Dash");
     }
+    #endregion
 
+    #region 이밴트 함수들
     public void StartDash()
     {
         DashDistance = transform.localScale.x > 0 ? -1 : 1;
@@ -246,4 +278,5 @@ public class PlayerCtrl : PlayerAbility
     {
         AttackHitObject(1, transform.position);
     }
+    #endregion
 }
