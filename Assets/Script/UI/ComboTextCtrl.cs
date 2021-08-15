@@ -7,24 +7,13 @@ public class ComboTextCtrl : MonoBehaviour
 {
     public Text ComboText;
     public Text BackComboText;
-    public PlayerCtrl player;
 
-    void Start()
-    {
-        
-    }
 
-    void Update()
+    private void Start()
     {
-        //if (PlayerCtrl.CurrentCombo > 0)
-        //{
-        //    ///ComboText.text = PlayerCtrl.CurrentCombo + " Combo";
-        //    ///BackComboText.text = PlayerCtrl.CurrentCombo + " Combo";
-        //}
-        //else
-        //{
-        //    ComboText.text = "";
-        //    BackComboText.text = "";
-        //}
+        PlayerCtrl.AddUpdateUIFun((PlayerCtrl player) => {
+            ComboText.text = player.Combo + " Combo";
+            BackComboText.text = player.Combo + " Combo";
+        });
     }
 }
