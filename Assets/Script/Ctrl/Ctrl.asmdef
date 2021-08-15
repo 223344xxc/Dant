@@ -1,7 +1,8 @@
 {
     "name": "Character",
     "references": [
-        "GUID:02d67002bb7835447bf7e4dba7cf8075"
+        "GUID:02d67002bb7835447bf7e4dba7cf8075",
+        "GUID:c00ba2bd534496242ba7fc6202ca1307"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
