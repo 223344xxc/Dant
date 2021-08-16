@@ -20,15 +20,15 @@ AnimationClip:
   m_PPtrCurves:
   - curve:
     - time: 0
-      value: {fileID: 341430171000024758, guid: f410056610666b04da8e720e1159d6b0, type: 3}
+      value: {fileID: -8214245419379390596, guid: dd35e078fa8b0194f850b9bf7ac62bf0, type: 3}
     - time: 0.083333336
-      value: {fileID: 5498850893096272632, guid: f410056610666b04da8e720e1159d6b0, type: 3}
+      value: {fileID: 4110622282348537464, guid: dd35e078fa8b0194f850b9bf7ac62bf0, type: 3}
     - time: 0.16666667
-      value: {fileID: -5782546789971702112, guid: f410056610666b04da8e720e1159d6b0, type: 3}
+      value: {fileID: 1294495593104410380, guid: dd35e078fa8b0194f850b9bf7ac62bf0, type: 3}
     - time: 0.25
-      value: {fileID: -3312180249324124291, guid: f410056610666b04da8e720e1159d6b0, type: 3}
+      value: {fileID: -3113892843132899510, guid: dd35e078fa8b0194f850b9bf7ac62bf0, type: 3}
     - time: 0.33333334
-      value: {fileID: 2704550997545077566, guid: f410056610666b04da8e720e1159d6b0, type: 3}
+      value: {fileID: -5394245921183937463, guid: dd35e078fa8b0194f850b9bf7ac62bf0, type: 3}
     attribute: m_Sprite
     path: 
     classID: 212
@@ -48,11 +48,11 @@ AnimationClip:
       customType: 23
       isPPtrCurve: 1
     pptrCurveMapping:
-    - {fileID: 341430171000024758, guid: f410056610666b04da8e720e1159d6b0, type: 3}
-    - {fileID: 5498850893096272632, guid: f410056610666b04da8e720e1159d6b0, type: 3}
-    - {fileID: -5782546789971702112, guid: f410056610666b04da8e720e1159d6b0, type: 3}
-    - {fileID: -3312180249324124291, guid: f410056610666b04da8e720e1159d6b0, type: 3}
-    - {fileID: 2704550997545077566, guid: f410056610666b04da8e720e1159d6b0, type: 3}
+    - {fileID: -8214245419379390596, guid: dd35e078fa8b0194f850b9bf7ac62bf0, type: 3}
+    - {fileID: 4110622282348537464, guid: dd35e078fa8b0194f850b9bf7ac62bf0, type: 3}
+    - {fileID: 1294495593104410380, guid: dd35e078fa8b0194f850b9bf7ac62bf0, type: 3}
+    - {fileID: -3113892843132899510, guid: dd35e078fa8b0194f850b9bf7ac62bf0, type: 3}
+    - {fileID: -5394245921183937463, guid: dd35e078fa8b0194f850b9bf7ac62bf0, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
@@ -87,6 +87,27 @@ AnimationClip:
     messageOptions: 0
   - time: 0
     functionName: SetAttack
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.033333335
+    functionName: ActiveAttackArea
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.083333336
+    functionName: AttackToHitObject
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.083333336
+    functionName: ActiveAttackArea
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

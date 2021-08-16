@@ -6,6 +6,7 @@ TagManager:
   tags:
   - GROUND
   - ATTACKAREA
+  - MONSTER
   layers:
   - Default
   - TransparentFX

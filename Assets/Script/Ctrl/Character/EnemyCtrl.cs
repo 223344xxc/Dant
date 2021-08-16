@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System;
 
 
 public class EnemyCtrl : MonoBehaviour
@@ -14,16 +14,12 @@ public class EnemyCtrl : MonoBehaviour
     [Header("적 능력치")]
     public float maxHp;
     public float hp;
-
     public float PowerX, PowerY;
 
 
     public float Hp
     {
-        get
-        {
-            return hp;
-        }
+        get => hp;
         set
         {
             hp = value;
@@ -35,7 +31,6 @@ public class EnemyCtrl : MonoBehaviour
             }
             if (hp > maxHp)
                 hp = maxHp;
-
         }
     }
 
@@ -64,7 +59,6 @@ public class EnemyCtrl : MonoBehaviour
     {
         get
         {
-
             if (IsGround == false)
                 MoveDir.y -= Gravity;
             if (IsMove)
@@ -109,8 +103,6 @@ public class EnemyCtrl : MonoBehaviour
         
     }
 
-
-
     void Update()
     {
         Move();
@@ -123,13 +115,15 @@ public class EnemyCtrl : MonoBehaviour
         spriteRenderer.color = Color.Lerp(spriteRenderer.color, StartColor, 0.05f);
     }
 
-    void Damaged(float Damage, Vector3 playerPos)
+    public void Damaged(float Damage, Vector3 playerPos, float ImpulseForce = 0, Action Event=null)
     {
         Vector3 ImpulseDir = transform.position - playerPos;
-        //ImpulseDir.y += 10;
-        rigidbody.AddForce(ImpulseDir.normalized * 500);
+        ImpulseDir.Set(ImpulseDir.x > 0 ? 500 * ImpulseForce : -500 * ImpulseForce, 0, 0);
+
+        rigidbody.AddForce(ImpulseDir);
         spriteRenderer.color = HitColor;
         Hp -= Damage;
+        Event?.Invoke();
         if (Hp > 0)
         {
             Destroy(Instantiate(HitEffectPrefab, transform), 1);
@@ -137,10 +131,9 @@ public class EnemyCtrl : MonoBehaviour
         else
         {
             Destroy(Instantiate(DeathEffectPrefab, transform), 1);
+            PlayerCtrl.RemoveAttackToObject(Damaged);
             Destroy(gameObject, 3);
         }
-        ///PlayerCtrl.ComboResetTime = PlayerCtrl.ResetTime;
-       /// PlayerCtrl.CurrentCombo += 1;
     }
 
     public void AddForceToUp()
@@ -165,18 +158,6 @@ public class EnemyCtrl : MonoBehaviour
             IsGround = true;
             MoveDir.y = 0;
         }
-        if (collision.gameObject.CompareTag("ATTACKAREA"))
-        {
-            ///PlayerCtrl.attack += Damaged;
-        }
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.CompareTag("ATTACKAREA"))
-        {
-            ///PlayerCtrl.attack += Damaged;
-        }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
@@ -184,18 +165,6 @@ public class EnemyCtrl : MonoBehaviour
         if (collision.gameObject.CompareTag("GROUND"))
         {
             IsGround = false;
-        }
-        if (collision.gameObject.CompareTag("ATTACKAREA"))
-        {
-            ///PlayerCtrl.attack -= Damaged;
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.CompareTag("ATTACKAREA"))
-        {
-           /// PlayerCtrl.attack -= Damaged;
         }
     }
 
