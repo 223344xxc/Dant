@@ -8,7 +8,7 @@ public class AreaCtrl : MonoBehaviour
     {
         if (collision.CompareTag("MONSTER"))
         {
-            PlayerCtrl.AddAttackToObject(collision.gameObject.GetComponent<EnemyCtrl>().Damaged);
+            PlayerCtrl.AddAttackToObject(collision.gameObject.GetComponent<EnemyCtrl>().Damaged_Enemy);
         }
     }
 
@@ -16,7 +16,7 @@ public class AreaCtrl : MonoBehaviour
     {
         if (collision.CompareTag("MONSTER"))
         {
-            PlayerCtrl.RemoveAttackToObject(collision.gameObject.GetComponent<EnemyCtrl>().Damaged);
+            PlayerCtrl.RemoveAttackToObject(collision.gameObject.GetComponent<EnemyCtrl>().Damaged_Enemy);
         }
     }
 }
