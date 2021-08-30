@@ -12,13 +12,13 @@ public enum AttackType
     JumpBottonAttack,
     SkillGrap,
     Ultimate,
-
+    AirDownSkill,
 }
-
-
 
 public class PlayerCtrl : PlayerAbility
 {
+    private static PlayerCtrl instance;
+    public static PlayerCtrl Instance => instance;
 
     private float combo = 0;
     public float Combo
@@ -33,6 +33,7 @@ public class PlayerCtrl : PlayerAbility
         }
     }
     public float ComboResetTime;
+    public HpBarCtrl hpBar;
 
     [SerializeField]private GameObject TopAttackEffect;
     
@@ -67,17 +68,17 @@ public class PlayerCtrl : PlayerAbility
             else
                 moveVector.Set(IsJump ? rigid.velocity.x : 0, rigid.velocity.y);
             if (Mathf.Abs(JoyStickCtrl.JoyStickPosition.x) > 3)
-                TempScale.Set(JoyStickCtrl.JoyStickPosition.x > 0 ? -1 * StartScale.x : 1 * StartScale.x, StartScale.y, StartScale.z);
+                moveScale.Set(JoyStickCtrl.JoyStickPosition.x > 0 ? -1 * StartScale.x : 1 * StartScale.x, StartScale.y, StartScale.z);
 
             return moveVector;
         }
     }
 
     private Vector3 StartScale;
-    private Vector3 TempScale;
+    private Vector3 moveScale;
     public Vector3 MoveScale
     {
-        get => TempScale;
+        get => moveScale;
     }
 
     private Vector2 JumpVelocity;
@@ -92,8 +93,9 @@ public class PlayerCtrl : PlayerAbility
 
     private Vector3 DumyVector;
 
-    private static Action<float, Vector3, float, Action> AttackToObject;
-    private static Action<PlayerCtrl> UpdatePlayerUI; 
+    private static Action<int, Vector3, float, Action> AttackToObject;
+    private static Action<PlayerCtrl> UpdatePlayerUI;
+    private static Action gameOver;
 
     public AttackType NowAttackType;
 
@@ -103,6 +105,10 @@ public class PlayerCtrl : PlayerAbility
 
     public override void Awake()
     {
+        if (instance is null)
+        {
+            instance = this;
+        }
         base.Awake();
         InitPlayer();
     }
@@ -112,9 +118,18 @@ public class PlayerCtrl : PlayerAbility
         ChackGround();
     }
 
+    public void OnDestroy()
+    {
+        if(instance != null)
+        {
+            instance = null;
+        }
+    }
+
     private void FixedUpdate()
     {
-        rigid.velocity = MoveVector;
+
+        PlayerRigidbodyUpdate();
     }
 
     private void InitPlayer()
@@ -123,7 +138,7 @@ public class PlayerCtrl : PlayerAbility
         anim = GetComponent<Animator>();
         renderer = GetComponent<SpriteRenderer>();
         StartScale = transform.localScale;
-        TempScale = StartScale;
+        moveScale = StartScale;
         InitAttackColliders();
     }
     private void InitAttackColliders()
@@ -143,13 +158,18 @@ public class PlayerCtrl : PlayerAbility
     {
         AttackColliders.Add(Key, transform.Find(ColliderName).gameObject);
     }
+    private void PlayerRigidbodyUpdate()
+    {
+        if (isDeath)
+            return;
+        rigid.velocity = MoveVector;
+    }
     private void PlayerMove()
     {
         if (isDeath)
             return;
         if (!IsAttack)
             transform.localScale = MoveScale;
-
 
         if (Input.GetKeyDown(KeyCode.Space) && !IsJump)
         {
@@ -177,7 +197,7 @@ public class PlayerCtrl : PlayerAbility
         }
         if (Input.GetKeyDown(KeyCode.X))
         {
-            Damaged(10);
+            Damaged(1);
         }
 
         if (JoyStickCtrl.StickFollow && Mathf.Abs(JoyStickCtrl.JoyStickPosition.x) > 3)
@@ -188,10 +208,14 @@ public class PlayerCtrl : PlayerAbility
         {
             anim.SetBool("IsMove", false);
         }
+
+
+        if (transform.position.y <= -20)
+            transform.position = new Vector3(0, 5, 0);
     }
     private void ChackGround()
     {
-        if (rigid.velocity.y < 0)
+        if (rigid.velocity.y < 0/* || (rigid.velocity.y <= 0 && IsJump == true)*/)
         {
             RaycastHit2D[] groundhit = Physics2D.CircleCastAll(CirclePos + transform.position, Radius, Vector2.zero);
             for (int i = 0; i < groundhit.Length; i++)
@@ -201,8 +225,13 @@ public class PlayerCtrl : PlayerAbility
                     if (IsJump && isDeath)
                         NormalDeath();
 
+
+                    if (NowAttackType == AttackType.AirDownSkill)
+                        AirDownRending();
                     IsJumpTopAttack = false;
                     IsJump = false;
+
+
                     break;
                 }
                 if (groundhit.Length - 1 == i)
@@ -216,13 +245,18 @@ public class PlayerCtrl : PlayerAbility
     {
         Combo = 0;
     }
-    public override void Damaged(float Damage)
+    public override void Damaged(int Damage)
     {
         if (isInvincibility)
             return;
         base.Damaged(Damage);
+        hpBar.HpBarDamage(Hp);
         if (!isDeath)
+        {
             StartCoroutine(Invincibility());
+        }
+        if (isDeath)
+            Invoke("GameOver", 3);
     }
     private IEnumerator Invincibility()
     {
@@ -253,6 +287,11 @@ public class PlayerCtrl : PlayerAbility
         isInvincibility = false;
     }
 
+    private void GameOver()
+    {
+        Report.Log("PlayerOver");
+        gameOver?.Invoke();
+    }
     private void SetPlayerAlpha(float value)
     {
         TempColor = renderer.color;
@@ -267,11 +306,11 @@ public class PlayerCtrl : PlayerAbility
     }
 
     #region 액션 추가 삭제 함수
-    public static void AddAttackToObject(Action<float, Vector3, float, Action> ObjectFun)
+    public static void AddAttackToObject(Action<int, Vector3, float, Action> ObjectFun)
     {
         AttackToObject += ObjectFun;
     }
-    public static void RemoveAttackToObject(Action<float, Vector3, float, Action> ObjectFun)
+    public static void RemoveAttackToObject(Action<int, Vector3, float, Action> ObjectFun)
     {
         AttackToObject -= ObjectFun;
     }
@@ -282,6 +321,10 @@ public class PlayerCtrl : PlayerAbility
     public static void RemoveUpdateUIFun(Action<PlayerCtrl> UpdateFun)
     {
         UpdatePlayerUI -= UpdateFun;
+    }
+    public static void AddGameOverFun(Action over)
+    {
+        gameOver = over;
     }
     #endregion
 
@@ -325,6 +368,10 @@ public class PlayerCtrl : PlayerAbility
 
         if (JoyStickCtrl.StickDirection == JoyStickDirection.DOWN && IsJump == false)
             SkillGrap();
+        else if (JoyStickCtrl.StickDirection == JoyStickDirection.UP && IsJump == false)
+            TopSkill();
+        else if (JoyStickCtrl.StickDirection == JoyStickDirection.DOWN && IsJump == true)
+            AirDownSkill();
         else
             NormalSkill();
     }
@@ -357,6 +404,15 @@ public class PlayerCtrl : PlayerAbility
     private void NormalSkill()
     {
         anim.Play("Skill");
+    }
+    private void TopSkill()
+    {
+        anim.Play("TopSkill");
+    }
+    private void AirDownSkill()
+    {
+        NowAttackType = AttackType.AirDownSkill;
+        anim.Play("AirDownFlySkill");
     }
     private void TopAttack()
     {
@@ -404,9 +460,19 @@ public class PlayerCtrl : PlayerAbility
         isDeath = true;
         anim.Play("NormalDeath");
     }
+    private void AirDownRending()
+    {
+        NowAttackType = AttackType.None;
+        anim.Play("AirDownRending");
+    }
     #endregion
 
     #region 이밴트 함수들
+    public void ForceJump(float Power)
+    {
+        IsJump = true;
+        rigid.AddForce(Vector2.up * Power);
+    }
     public void StartDash()
     {
         DashDistance = transform.localScale.x > 0 ? -1 : 1;
