@@ -5,22 +5,22 @@ using UnityEngine;
 public class Ability : MonoBehaviour
 {
     [Header("능력치")]
-    [SerializeField] private float maxHp; //최대 체력
-    public float MaxHp
+    [SerializeField] private int maxHp; //최대 체력
+    public int MaxHp
     {
         get => maxHp;
         set => maxHp = value;
     }
 
-    [SerializeField] private float hp; //현재 체력
-    public float Hp
+    [SerializeField] private int hp; //현재 체력
+    public int Hp
     {
         get => hp;
         set => hp = value > 0 ? value : 0;
     }
 
-    [SerializeField] private float attackDamage; //공격력
-    public float AttackDamage
+    [SerializeField] private int attackDamage; //공격력
+    public int AttackDamage
     {
         get => attackDamage;
         set => attackDamage = value;
@@ -54,7 +54,7 @@ public class Ability : MonoBehaviour
     }
     public virtual void Death() { isDeath = true; }
 
-    public virtual void Damaged(float Damage)
+    public virtual void Damaged(int Damage)
     {
         Hp -= Damage;
         if (Hp <= 0)
