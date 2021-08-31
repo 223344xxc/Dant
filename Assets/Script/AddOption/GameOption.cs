@@ -17,7 +17,17 @@ public static class GameOption
     public static Action<GameState> setGameState;
 
     private static Action startGame;
+    public static Action StartGame
+    {
+        get => startGame;
+        set => startGame = value;
+    }
     private static Action endGame;
+    public static Action EndGame
+    {
+        get => endGame;
+        set => endGame = value;
+    }
 
     public static GameState? GetGameState()
     {
@@ -34,14 +44,14 @@ public static class GameOption
         return state == getGameState?.Invoke();
     }
 
-    public static void BindStartGameFunction(Action startgame) { startGame = startgame; }
-    public static void BindEndGameFunction(Action endgame) { endGame = endgame; }
-    public static void StartGame()
+    //public static void BindStartGameFunction(Action startgame) { startGame = startgame; }
+    //public static void BindEndGameFunction(Action endgame) { endGame = endgame; }
+    public static void GameStart()
     {
         startGame?.Invoke();
     }
 
-    public static void EndGame()
+    public static void GameEnd()
     {
         endGame?.Invoke();
     }

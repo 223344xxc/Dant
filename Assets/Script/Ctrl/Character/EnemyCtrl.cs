@@ -98,9 +98,10 @@ public class EnemyCtrl : Ability
         spriteRenderer.color = Color.Lerp(spriteRenderer.color, startColor, 0.05f);
     }
 
-    public void Damaged_Enemy(int damage, Vector3 playerPos, float ImpulseForce = 0, Action Event=null)
+    public void Damaged_Enemy(int damage, float ImpulseForce = 0, Action Event=null)
     {
-        Vector3 ImpulseDir = transform.position - playerPos;
+        Debug.Log("damaged");
+        Vector3 ImpulseDir = transform.position - PlayerCtrl.Instance.transform.position;
         ImpulseDir.Set(ImpulseDir.x > 0 ? 500 * ImpulseForce : -500 * ImpulseForce, 0, 0);
 
         rigidbody.AddForce(ImpulseDir);
@@ -115,7 +116,6 @@ public class EnemyCtrl : Ability
         else
         {
             Destroy(Instantiate(DeathEffectPrefab, transform), 1);
-            PlayerCtrl.RemoveAttackToObject(Damaged_Enemy);
             Destroy(gameObject, 3);
         }
     }
@@ -158,9 +158,11 @@ public class EnemyCtrl : Ability
     }
 
 
+#if UNITY_EDITOR
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(transform.position + circleOffset, Radius);
     }
+#endif
 }

@@ -93,7 +93,10 @@ public class PlayerCtrl : PlayerAbility
 
     private Vector3 DumyVector;
 
-    private static Action<int, Vector3, float, Action> AttackToObject;
+    public delegate void AttackObject(int damage, float impulse, Action eventAction);
+
+    //private static Action<int, Vector3, float, Action> AttackToObject;
+    private static AttackObject AttackToObject;
     private static Action<PlayerCtrl> UpdatePlayerUI;
     private static Action gameOver;
 
@@ -289,7 +292,6 @@ public class PlayerCtrl : PlayerAbility
 
     private void GameOver()
     {
-        Report.Log("PlayerOver");
         gameOver?.Invoke();
     }
     private void SetPlayerAlpha(float value)
@@ -306,11 +308,11 @@ public class PlayerCtrl : PlayerAbility
     }
 
     #region 액션 추가 삭제 함수
-    public static void AddAttackToObject(Action<int, Vector3, float, Action> ObjectFun)
+    public static void AddAttackToObject(AttackObject ObjectFun)
     {
         AttackToObject += ObjectFun;
     }
-    public static void RemoveAttackToObject(Action<int, Vector3, float, Action> ObjectFun)
+    public static void RemoveAttackToObject(AttackObject ObjectFun)
     {
         AttackToObject -= ObjectFun;
     }
@@ -519,10 +521,10 @@ public class PlayerCtrl : PlayerAbility
     {
         if (NowAttackType == AttackType.SkillGrap)
         {
-            AttackToObject?.Invoke(AttackDamage, transform.position, -2, () => Combo += 1);
+            AttackToObject?.Invoke(AttackDamage, -2, () => Combo += 1);
         }
         else
-            AttackToObject?.Invoke(AttackDamage, transform.position, 0.5f, () => Combo += 1);
+            AttackToObject?.Invoke(AttackDamage, 0.5f, () => Combo += 1);
     }
     #endregion
 }

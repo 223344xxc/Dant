@@ -28,8 +28,8 @@ public class GameMgr : MonoBehaviour
     {
         GameOption.getGameState = () => { return GetGameState(); };
         GameOption.setGameState = (GameState state) => { SetGameState(state); };
-        GameOption.BindStartGameFunction(StartGame);
-        GameOption.BindEndGameFunction(EndGame);
+        GameOption.StartGame = StartGame;
+        GameOption.EndGame = EndGame;
         player = GameObject.FindWithTag("Player").GetComponent<PlayerCtrl>();
         
     }
