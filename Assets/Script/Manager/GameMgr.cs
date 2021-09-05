@@ -10,7 +10,6 @@ public class GameMgr : MonoBehaviour
 
     public static void SetGameState(GameState gameState)
     {
-        Debug.Log(gameState);
         GameMgr.gameState = gameState;
     }
     public static GameState GetGameState()
