@@ -22,8 +22,10 @@ public class SpriteAnim : MonoBehaviour
         set => delay = value;
     }
     [SerializeField] private AnimState animState;
-
+    [SerializeField] private bool doEndDestroy = false;
     private Image image;
+    private SpriteRenderer spriteRenderer;
+    private bool SpriteType = false; // true : 이미지     false : 스프라이트 렌더러
     private float time;
     private int spriteIndex = 0;
 
@@ -39,12 +41,21 @@ public class SpriteAnim : MonoBehaviour
     private void InitSpriteAnim()
     {
         image = GetComponent<Image>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+
+        if (spriteRenderer)
+            SpriteType = false;
+        else if (image)
+            SpriteType = true;
 
         SetSprite(sprites[0]);
     }
     private void SetSprite(Sprite sprite)
     {
-        image.sprite = sprite;
+        if (SpriteType)
+            image.sprite = sprite;
+        else
+            spriteRenderer.sprite = sprite;
     }
 
     private void Update()
@@ -79,10 +90,16 @@ public class SpriteAnim : MonoBehaviour
         if(time >= delay)
         {
             time = 0;
-            if(spriteIndex == sprites.Length - 1 && isCasting)
+            if(spriteIndex == sprites.Length - 1)
             {
-                ReleaseCastAnimation();
-                eventFun?.Invoke();
+                if (isCasting)
+                {
+                    ReleaseCastAnimation();
+                    eventFun?.Invoke();
+                }
+                if (doEndDestroy)
+                    Destroy(gameObject);
+        
             }
 
             spriteIndex = (spriteIndex + 1) % sprites.Length;
