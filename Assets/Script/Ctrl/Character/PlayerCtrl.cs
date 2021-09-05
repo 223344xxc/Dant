@@ -7,6 +7,7 @@ public enum AttackType
     None,
     NormalAttack,
     TopAttack,
+    TopSkill,
     BottomAttack,
     JumpTopAttack,
     JumpBottonAttack,
@@ -35,8 +36,10 @@ public class PlayerCtrl : PlayerAbility
     public float ComboResetTime;
     public HpBarCtrl hpBar;
 
-    [SerializeField]private GameObject TopAttackEffect;
-    
+    [SerializeField] private GameObject TopAttackEffect;
+    [SerializeField] private GameObject projectilePrefab;
+
+    [SerializeField] private Transform projectilePoint;
     private Dictionary<AttackType, GameObject> AttackColliders;
 
     private Rigidbody2D rigid;
@@ -95,7 +98,6 @@ public class PlayerCtrl : PlayerAbility
 
     public delegate void AttackObject(int damage, float impulse, Action eventAction);
 
-    //private static Action<int, Vector3, float, Action> AttackToObject;
     private static AttackObject AttackToObject;
     private static Action<PlayerCtrl> UpdatePlayerUI;
     private static Action gameOver;
@@ -156,6 +158,8 @@ public class PlayerCtrl : PlayerAbility
         AddAttackCollider(AttackType.BottomAttack, "BottomAttackArea");
         AddAttackCollider(AttackType.SkillGrap, "SkillGrapAttackArea");
         AddAttackCollider(AttackType.Ultimate, "UltimateAttackArea");
+        AddAttackCollider(AttackType.AirDownSkill, "AirDownSkillAttackArea");
+        AddAttackCollider(AttackType.TopSkill, "TopSkillAttackArea");
     }
     private void AddAttackCollider(AttackType Key, string ColliderName)
     {
@@ -246,7 +250,8 @@ public class PlayerCtrl : PlayerAbility
     }
     public void ComboReset()
     {
-        Combo = 0;
+        if (Combo > 0)
+            Combo = 0;
     }
     public override void Damaged(int Damage)
     {
@@ -372,7 +377,7 @@ public class PlayerCtrl : PlayerAbility
             SkillGrap();
         else if (JoyStickCtrl.StickDirection == JoyStickDirection.UP && IsJump == false)
             TopSkill();
-        else if (JoyStickCtrl.StickDirection == JoyStickDirection.DOWN && IsJump == true)
+        else if (IsJump == true)
             AirDownSkill();
         else
             NormalSkill();
@@ -409,6 +414,7 @@ public class PlayerCtrl : PlayerAbility
     }
     private void TopSkill()
     {
+        NowAttackType = AttackType.TopSkill;
         anim.Play("TopSkill");
     }
     private void AirDownSkill()
@@ -464,12 +470,19 @@ public class PlayerCtrl : PlayerAbility
     }
     private void AirDownRending()
     {
-        NowAttackType = AttackType.None;
+        //NowAttackType = AttackType.None;
         anim.Play("AirDownRending");
     }
     #endregion
 
     #region 이밴트 함수들
+    public void SpawnProjectile()
+    {
+        GameObject bullet = Instantiate(projectilePrefab);
+        bullet.transform.position = projectilePoint.position;
+        bullet.transform.localScale = transform.localScale;
+    }
+
     public void ForceJump(float Power)
     {
         IsJump = true;
@@ -515,6 +528,11 @@ public class PlayerCtrl : PlayerAbility
         {
             AttackColliders[NowAttackType].SetActive(!AttackColliders[NowAttackType].activeInHierarchy);
         }
+    }
+
+    public void ResetAttackType()
+    {
+        NowAttackType = AttackType.None;
     }
 
     public void AttackToHitObject()
