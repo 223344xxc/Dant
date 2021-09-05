@@ -13,8 +13,6 @@ public class EnemyCtrl : Ability
     [Header("적 능력치")]
     public float PowerX, PowerY;
     public float Radius;
-    public Vector3 circleOffset;
-    public LayerMask layer;
 
     [Header("적 옵션")]
     [Tooltip("중력값")]
@@ -39,8 +37,15 @@ public class EnemyCtrl : Ability
         get
         {
             var distance = Vector3.Distance(PlayerCtrl.Instance.transform.position, transform.position);
-  
-            moveScale.x = moveVel.x > 0 ? -Mathf.Abs(StartScale.x) : Mathf.Abs(StartScale.x);
+
+            if (distance >= 1.5f && distance <= 5 && !isDeath)
+                moveVel.x = PlayerCtrl.Instance.transform.position.x - transform.position.x > 0 ? MoveSpeed * 10 : -MoveSpeed * 10;
+            else
+                moveVel.x = 0;
+
+            moveVel.y = rigidbody.velocity.y;
+            if (Mathf.Abs(moveVel.x) > 0)
+                moveScale.x = moveVel.x > 0 ? -Mathf.Abs(StartScale.x) : Mathf.Abs(StartScale.x);
             return moveVel;
         }
         set => moveVel = value;
@@ -90,6 +95,8 @@ public class EnemyCtrl : Ability
 
     private void EnemyRigidbodyUpdate()
     {
+        if (isDeath)
+            return;
         rigidbody.velocity = MoveVel;
     }
 
@@ -100,7 +107,6 @@ public class EnemyCtrl : Ability
 
     public void Damaged_Enemy(int damage, float ImpulseForce = 0, Action Event=null)
     {
-        Debug.Log("damaged");
         Vector3 ImpulseDir = transform.position - PlayerCtrl.Instance.transform.position;
         ImpulseDir.Set(ImpulseDir.x > 0 ? 500 * ImpulseForce : -500 * ImpulseForce, 0, 0);
 
@@ -115,7 +121,7 @@ public class EnemyCtrl : Ability
         }
         else
         {
-            Destroy(Instantiate(DeathEffectPrefab, transform), 1);
+            Destroy(Instantiate(HitEffectPrefab, transform), 1);
             Destroy(gameObject, 3);
         }
     }
@@ -128,14 +134,15 @@ public class EnemyCtrl : Ability
     public void AddForceToUp()
     {
         Vector3 ImpulseDir = Vector3.zero;
-        ImpulseDir.x = PowerX;
+        ImpulseDir.x = PowerX * transform.localScale.x;
         ImpulseDir.y = PowerY;
+        GetComponent<BoxCollider2D>().enabled = false;
         rigidbody.AddForce(ImpulseDir * 0.35f);
     }
 
     void Move()
     {
-        animator.SetFloat("MoveVel", rigidbody.velocity.x);
+        animator.SetFloat("MoveVel", Mathf.Abs(rigidbody.velocity.x));
         transform.localScale = MoveScale;
     }
 
@@ -162,7 +169,7 @@ public class EnemyCtrl : Ability
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(transform.position + circleOffset, Radius);
+        Gizmos.DrawWireSphere(transform.position, Radius);
     }
 #endif
 }
