@@ -22,11 +22,12 @@ public class UICtrl : MonoBehaviour
     private Dictionary<UiState, GameObject> UiList;
     private Text PlayerHpText;
     private Image EndGameBackGround;
+    private MainCtrl main;
+
 
     [SerializeField] private Text minText;
     [SerializeField] private Text secText;
 
-    [SerializeField] private static int timeMin;
     [SerializeField] private static float timeSec;
 
     [SerializeField] private Color fadeColor;
@@ -47,6 +48,7 @@ public class UICtrl : MonoBehaviour
         AddUiDictionary(UiState.EndGame, "EndGame");
         PlayerHpText = UiList[UiState.EndGame].transform.Find("EndGamePanel").transform.Find("Hart").transform.Find("HartCount").GetComponent<Text>();
         EndGameBackGround = UiList[UiState.EndGame].transform.Find("EndGamePanel").transform.Find("BackGround").GetComponent<Image>();
+        main = GameObject.Find("Main").GetComponent<MainCtrl>();
 
     }
 
@@ -109,6 +111,24 @@ public class UICtrl : MonoBehaviour
             return;
         TimerUpdate();
     }
+    
+    public void outGame()
+    {
+        GameOption.SetGameState(GameState.None);
+        timeSec = 0;
+    }
+
+    public void SceneLoad(string sceneName)
+    {
+        outGame();
+        if (main)
+            if (sceneName == "")
+                main.LoadScene(MainCtrl.NowScene);
+            else
+                main.LoadScene(sceneName);
+
+    }
+
     public void FadeOut()
     {
         fadeImage.enabled = true;
@@ -119,6 +139,7 @@ public class UICtrl : MonoBehaviour
         fadeImage.enabled = true;
         StartCoroutine(FadeScreen(false));
     }
+
 
     private IEnumerator FadeScreen(bool fadeState) // true = out  / false = in
     {
@@ -149,13 +170,7 @@ public class UICtrl : MonoBehaviour
     {
         timeSec += Time.deltaTime;
 
-        if((int)timeSec == 59)
-        {
-            timeMin += 1;
-            timeSec = 0;
-        }
-
-        minText.text = timeMin.ToString("f0");
-        secText.text = timeSec.ToString("f0");
+        minText.text = (timeSec / 60).ToString("f0");
+        secText.text = (timeSec % 60).ToString("f0");
     }
 }
