@@ -6,6 +6,7 @@ using UnityEngine;
 public class MainCtrl : MonoBehaviour
 {
     LoadingCtrl loading;
+    public static string NowScene = "StartScene";
 
     void Start()
     {
@@ -16,5 +17,6 @@ public class MainCtrl : MonoBehaviour
     public void LoadScene(string name)
     {
         loading.StartLoading(name);
+        NowScene = name;
     }
 }
