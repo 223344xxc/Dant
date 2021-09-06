@@ -5,11 +5,16 @@ using UnityEngine.UI;
 
 public class ComboTextCtrl : MonoBehaviour
 {
-    [SerializeField] private Text ComboText;
-    [SerializeField] private Text BackComboText;
-    [SerializeField] private Animator anim;
+    private Text ComboText;
+    private Text BackComboText;
+    private Animator anim;
 
-    private bool canPlay = true;
+    private void Awake()
+    {
+        anim = GetComponent<Animator>();
+        ComboText = GetComponent<Text>();
+        BackComboText = transform.Find("ShadowText").GetComponent<Text>();
+    }
 
     private void Start()
     {
@@ -19,16 +24,4 @@ public class ComboTextCtrl : MonoBehaviour
             BackComboText.text = player.Combo + " Combo";
         });
     }
-
-    #region 이벤트
-    public void StartPlay()
-    {
-        canPlay = false;
-    }
-
-    public void EndPlay()
-    {
-        canPlay = true;
-    }
-    #endregion
 }

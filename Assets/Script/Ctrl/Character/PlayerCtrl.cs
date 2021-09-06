@@ -110,11 +110,6 @@ public class PlayerCtrl : PlayerAbility
 
     public override void Awake()
     {
-        if (instance is null)
-        {
-            instance = this;
-        }
-        base.Awake();
         InitPlayer();
     }
     public void Update()
@@ -139,6 +134,11 @@ public class PlayerCtrl : PlayerAbility
 
     private void InitPlayer()
     {
+        if (instance is null)
+        {
+            instance = this;
+        }
+        base.Awake();
         rigid = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         renderer = GetComponent<SpriteRenderer>();
@@ -323,11 +323,7 @@ public class PlayerCtrl : PlayerAbility
     }
     public static void AddUpdateUIFun(Action<PlayerCtrl> UpdateFun)
     {
-        UpdatePlayerUI += UpdateFun;
-    }
-    public static void RemoveUpdateUIFun(Action<PlayerCtrl> UpdateFun)
-    {
-        UpdatePlayerUI -= UpdateFun;
+        UpdatePlayerUI = UpdateFun;
     }
     public static void AddGameOverFun(Action over)
     {
