@@ -99,7 +99,15 @@ public class PlayerCtrl : PlayerAbility
     public delegate void AttackObject(int damage, float impulse, Action eventAction);
 
     private static AttackObject AttackToObject;
-    private static Action<PlayerCtrl> UpdatePlayerUI;
+
+    private static Action<PlayerCtrl> updatePlayerUI;
+    public static Action<PlayerCtrl> UpdatePlayerUI
+    {
+        get => updatePlayerUI;
+        set => updatePlayerUI = value;
+    }
+
+
     private static Action gameOver;
 
     public AttackType NowAttackType;
@@ -218,7 +226,10 @@ public class PlayerCtrl : PlayerAbility
 
 
         if (transform.position.y <= -20)
+        {
             transform.position = new Vector3(0, 5, 0);
+            Damaged(1);
+        }
     }
     private void ChackGround()
     {
@@ -320,10 +331,6 @@ public class PlayerCtrl : PlayerAbility
     public static void RemoveAttackToObject(AttackObject ObjectFun)
     {
         AttackToObject -= ObjectFun;
-    }
-    public static void AddUpdateUIFun(Action<PlayerCtrl> UpdateFun)
-    {
-        UpdatePlayerUI = UpdateFun;
     }
     public static void AddGameOverFun(Action over)
     {

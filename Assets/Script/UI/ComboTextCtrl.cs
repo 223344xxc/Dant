@@ -18,10 +18,10 @@ public class ComboTextCtrl : MonoBehaviour
 
     private void Start()
     {
-        PlayerCtrl.AddUpdateUIFun((PlayerCtrl player) => {
+        PlayerCtrl.UpdatePlayerUI = (PlayerCtrl player) => {
             anim.Play("ComboAnim");
             ComboText.text = player.Combo + " Combo";
             BackComboText.text = player.Combo + " Combo";
-        });
+        };
     }
 }

@@ -6,37 +6,37 @@ using System;
 
 public class EnemyCtrl : Ability
 {
-    Rigidbody2D rigidbody;
-    SpriteRenderer spriteRenderer;
-    Animator animator;
+    protected Rigidbody2D rigidbody;
+    private SpriteRenderer spriteRenderer;
+    protected Animator animator;
 
     [Header("적 능력치")]
-    public float PowerX, PowerY;
-    public float Radius;
+    [SerializeField] private float PowerX, PowerY;
+    [SerializeField] private float trackingRadius;
+    [SerializeField] private Vector3 trakingOffset; 
 
     [Header("적 옵션")]
     [Tooltip("중력값")]
-    public float Gravity;
+    [SerializeField] private float Gravity;
 
-    [Header("적 상태")]
-    public bool IsMove = true;
-    public bool IsGround = false;
+    private bool IsMove = true;
+    private bool IsGround = false;
 
     [Tooltip("피격 이펙트 프리펩")]
-    public GameObject HitEffectPrefab;
-    public GameObject DeathEffectPrefab;
+    [SerializeField] private GameObject HitEffectPrefab;
+    [SerializeField] private GameObject DeathEffectPrefab;
 
 
     [SerializeField] private Color HitColor;
     private Color startColor;
 
-    private Vector3 StartScale;
+    protected Vector3 StartScale;
     public Vector3 moveVel;
-    public Vector3 MoveVel
+    public virtual Vector3 MoveVel
     {
         get
         {
-            var distance = Vector3.Distance(PlayerCtrl.Instance.transform.position, transform.position);
+            var distance = Vector3.Distance(PlayerCtrl.Instance.transform.position, trakingOffset + transform.position);
 
             if (distance >= 1.5f && distance <= 5 && !isDeath)
                 moveVel.x = PlayerCtrl.Instance.transform.position.x - transform.position.x > 0 ? MoveSpeed * 10 : -MoveSpeed * 10;
@@ -51,7 +51,7 @@ public class EnemyCtrl : Ability
         set => moveVel = value;
     }
 
-    private Vector3 moveScale;
+    protected Vector3 moveScale;
     public Vector3 MoveScale
     {
         get => moveScale;
@@ -64,7 +64,7 @@ public class EnemyCtrl : Ability
         InitEnemy();    
     }
 
-    void InitEnemy()
+    private void InitEnemy()
     {
         StartScale = gameObject.transform.localScale;
         rigidbody = GetComponent<Rigidbody2D>();
@@ -74,22 +74,14 @@ public class EnemyCtrl : Ability
         moveScale = StartScale;
     }
 
-    void Start()
+    protected virtual void Update()
     {
-        
-    }
-
-    void Update()
-    {
-        
         Move();
-    
         UpdateColor();
     }
 
-    private void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
-  
         EnemyRigidbodyUpdate();
     }
 
@@ -139,8 +131,12 @@ public class EnemyCtrl : Ability
         GetComponent<BoxCollider2D>().enabled = false;
         rigidbody.AddForce(ImpulseDir * 0.35f);
     }
+    public void DestroyEvent()
+    {
+        Destroy(gameObject);
+    }
 
-    void Move()
+    private void Move()
     {
         animator.SetFloat("MoveVel", Mathf.Abs(rigidbody.velocity.x));
         transform.localScale = MoveScale;
@@ -166,10 +162,10 @@ public class EnemyCtrl : Ability
 
 
 #if UNITY_EDITOR
-    private void OnDrawGizmosSelected()
+    protected virtual void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(transform.position, Radius);
+        Gizmos.DrawWireSphere(trakingOffset + transform.position, trackingRadius);
     }
 #endif
 }
