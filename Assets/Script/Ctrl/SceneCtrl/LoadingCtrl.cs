@@ -22,7 +22,6 @@ public class LoadingCtrl : MonoBehaviour
         SceneManager.LoadScene("Loading", LoadSceneMode.Additive);
         StopAllCoroutines();
         StartCoroutine(Loading());
-        
     }
 
     IEnumerator Loading()

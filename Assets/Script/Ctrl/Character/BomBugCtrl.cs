@@ -17,10 +17,8 @@ public class BomBugCtrl : EnemyCtrl
 
     private void ExplodChack()
     {
-        Vector3.Distance(explodOffset + transform.position, PlayerCtrl.Instance.transform.position).Log();
         if (Vector3.Distance(explodOffset + transform.position, PlayerCtrl.Instance.transform.position) < explodRadius)
         {
-            "explod".LogError();
             MoveSpeed = 0;
             animator.Play("Explosion");
         }

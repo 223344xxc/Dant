@@ -13,11 +13,7 @@ public class EnemyCtrl : Ability
     [Header("적 능력치")]
     [SerializeField] private float PowerX, PowerY;
     [SerializeField] private float trackingRadius;
-    [SerializeField] private Vector3 trakingOffset; 
-
-    [Header("적 옵션")]
-    [Tooltip("중력값")]
-    [SerializeField] private float Gravity;
+    [SerializeField] protected Vector3 trakingOffset; 
 
     private bool IsMove = true;
     private bool IsGround = false;
@@ -25,7 +21,6 @@ public class EnemyCtrl : Ability
     [Tooltip("피격 이펙트 프리펩")]
     [SerializeField] private GameObject HitEffectPrefab;
     [SerializeField] private GameObject DeathEffectPrefab;
-
 
     [SerializeField] private Color HitColor;
     private Color startColor;
@@ -38,7 +33,7 @@ public class EnemyCtrl : Ability
         {
             var distance = Vector3.Distance(PlayerCtrl.Instance.transform.position, trakingOffset + transform.position);
 
-            if (distance >= 1.5f && distance <= 5 && !isDeath)
+            if (distance >= 1.5f && distance <= trackingRadius && !isDeath)
                 moveVel.x = PlayerCtrl.Instance.transform.position.x - transform.position.x > 0 ? MoveSpeed * 10 : -MoveSpeed * 10;
             else
                 moveVel.x = 0;
@@ -85,7 +80,7 @@ public class EnemyCtrl : Ability
         EnemyRigidbodyUpdate();
     }
 
-    private void EnemyRigidbodyUpdate()
+    protected virtual void EnemyRigidbodyUpdate()
     {
         if (isDeath)
             return;
@@ -128,7 +123,16 @@ public class EnemyCtrl : Ability
         Vector3 ImpulseDir = Vector3.zero;
         ImpulseDir.x = PowerX * transform.localScale.x;
         ImpulseDir.y = PowerY;
-        GetComponent<BoxCollider2D>().enabled = false;
+
+        try
+        {
+            GetComponent<BoxCollider2D>().enabled = false;
+        }
+        catch
+        {
+            GetComponent<CircleCollider2D>().enabled = false;
+        }
+
         rigidbody.AddForce(ImpulseDir * 0.35f);
     }
     public void DestroyEvent()
