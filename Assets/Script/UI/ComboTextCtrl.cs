@@ -5,15 +5,23 @@ using UnityEngine.UI;
 
 public class ComboTextCtrl : MonoBehaviour
 {
-    public Text ComboText;
-    public Text BackComboText;
+    private Text ComboText;
+    private Text BackComboText;
+    private Animator anim;
 
+    private void Awake()
+    {
+        anim = GetComponent<Animator>();
+        ComboText = GetComponent<Text>();
+        BackComboText = transform.Find("ShadowText").GetComponent<Text>();
+    }
 
     private void Start()
     {
-        PlayerCtrl.AddUpdateUIFun((PlayerCtrl player) => {
+        PlayerCtrl.UpdatePlayerUI = (PlayerCtrl player) => {
+            anim.Play("ComboAnim");
             ComboText.text = player.Combo + " Combo";
             BackComboText.text = player.Combo + " Combo";
-        });
+        };
     }
 }

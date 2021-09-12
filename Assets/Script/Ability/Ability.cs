@@ -40,8 +40,8 @@ public class Ability : MonoBehaviour
         set => moveSpeed = value;
     }
 
-    protected bool isDeath = false;
-    protected bool isInvincibility = false;
+    protected bool isDeath = false;          //죽었는가
+    protected bool isInvincibility = false;  //무적 유무
 
     public virtual void Awake()
     {
