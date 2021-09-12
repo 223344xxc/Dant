@@ -54,12 +54,16 @@ MonoBehaviour:
   moveSpeed: 5
   PowerX: 0
   PowerY: 0
-  trackingRadius: 5
+  trackingRadius: 10
   trakingOffset: {x: -0.14, y: -1.29, z: 0}
   HitEffectPrefab: {fileID: 5895873028942484194, guid: 21d2810f3e4c910478def76f98c5981d, type: 3}
   DeathEffectPrefab: {fileID: 7066305097905136984, guid: 08c2c96f71b1061499532c541470afc8, type: 3}
   HitColor: {r: 1, g: 0, b: 0, a: 1}
   moveVel: {x: 0, y: 0, z: 0}
+  attackDelay: 3
+  AttackRange: 4.25
+  AttackOffset: {x: -0.14, y: -1.29, z: 0}
+  apidBulletPrefab: {fileID: 2390772678237376877, guid: 5852012731961d1498fa5c7ca46f4d6d, type: 3}
 --- !u!212 &1867124832741078799
 SpriteRenderer:
   m_ObjectHideFlags: 0
