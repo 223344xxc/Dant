@@ -33,6 +33,7 @@ public class UICtrl : MonoBehaviour
     [SerializeField] private Color fadeColor;
     public float fadeSpeed;
 
+    private bool StartedGame = false;
     public void Awake()
     {
         InitUi();
@@ -49,7 +50,7 @@ public class UICtrl : MonoBehaviour
         PlayerHpText = UiList[UiState.EndGame].transform.Find("EndGamePanel").transform.Find("Hart").transform.Find("HartCount").GetComponent<Text>();
         EndGameBackGround = UiList[UiState.EndGame].transform.Find("EndGamePanel").transform.Find("BackGround").GetComponent<Image>();
         main = GameObject.Find("Main").GetComponent<MainCtrl>();
-
+        Time.timeScale = 0;
     }
 
     private void AddUiDictionary(UiState uiState, string uiName)
@@ -102,11 +103,16 @@ public class UICtrl : MonoBehaviour
 
     public void Start()
     {
-        if (GameOption.IsGameState(GameState.None))
-            FadeOut();
+        //if (GameOption.IsGameState(GameState.None))
+        //    FadeOut();
     }
     public void Update()
     {
+        GameOption.GetGameState().LogError();
+        MainCtrl.nowSceneLoauded.LogError();
+        if (!StartedGame && MainCtrl.nowSceneLoauded)
+            FadeOut();
+
         if (!GameOption.IsGameState(GameState.Play))
             return;
         TimerUpdate();
@@ -131,6 +137,7 @@ public class UICtrl : MonoBehaviour
 
     public void FadeOut()
     {
+        StartedGame = true;
         fadeImage.enabled = true;
         StartCoroutine(FadeScreen(true));
     }
