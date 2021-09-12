@@ -12,7 +12,7 @@ public class EnemyCtrl : Ability
 
     [Header("적 능력치")]
     [SerializeField] private float PowerX, PowerY;
-    [SerializeField] private float trackingRadius;
+    [SerializeField] protected float trackingRadius;
     [SerializeField] protected Vector3 trakingOffset; 
 
     private bool IsMove = true;

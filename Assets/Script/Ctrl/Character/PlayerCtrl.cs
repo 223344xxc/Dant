@@ -20,6 +20,7 @@ public class PlayerCtrl : PlayerAbility
 {
     private static PlayerCtrl instance;
     public static PlayerCtrl Instance => instance;
+    public Vector3 playerCenterOffset;
 
     private float combo = 0;
     public float Combo
@@ -548,4 +549,11 @@ public class PlayerCtrl : PlayerAbility
             AttackToObject?.Invoke(AttackDamage, 0.5f, () => Combo += 1);
     }
     #endregion
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.blue;
+
+        Gizmos.DrawSphere(transform.position + playerCenterOffset, 0.1f);
+    }
 }
