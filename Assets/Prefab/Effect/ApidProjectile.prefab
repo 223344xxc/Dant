@@ -115,7 +115,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 001ac2624ca6b0445b6583b574eca834, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 10
+  Speed: 13
   moveDirection: {x: 0, y: 0, z: 0}
   HitEffect: {fileID: 2524935886319804220, guid: dce7d6b4157ccf441a9e0a40c44f4a8e, type: 3}
 --- !u!58 &2073553881482135136

@@ -56,6 +56,7 @@ MonoBehaviour:
   PowerY: 0
   trackingRadius: 10
   trakingOffset: {x: -0.14, y: -1.29, z: 0}
+  hitRadius: 1.64
   HitEffectPrefab: {fileID: 5895873028942484194, guid: 21d2810f3e4c910478def76f98c5981d, type: 3}
   DeathEffectPrefab: {fileID: 7066305097905136984, guid: 08c2c96f71b1061499532c541470afc8, type: 3}
   HitColor: {r: 1, g: 0, b: 0, a: 1}
