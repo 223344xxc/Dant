@@ -8,5 +8,4 @@ Library/*
 *.csproj
 
 .DS_Store
-*.apk
 .vsconfig
