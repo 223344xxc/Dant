@@ -8,6 +8,7 @@ TagManager:
   - ATTACKAREA
   - MONSTER
   - MAIN
+  - FLOWER
   layers:
   - Default
   - TransparentFX

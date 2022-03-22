@@ -4,21 +4,26 @@ using UnityEngine;
 
 public class ProjectileCtrl : MonoBehaviour
 {
-    [SerializeField] private float Speed;
+    [SerializeField] protected float Speed;
 
-    private void Awake()
+    protected virtual void Awake()
     {
-        Destroy(gameObject, 10);
+        Destroy(gameObject, 0.5f);
     }
 
-    private void Update()
+    protected void Update()
     {
-        transform.position += transform.localScale.x > 0 ? 
-            -transform.right * Time.deltaTime * Speed : 
-             transform.right * Time.deltaTime * Speed; 
+        ProjectileUpdate();
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    protected virtual void ProjectileUpdate()
+    {
+        transform.position += transform.localScale.x > 0 ?
+                             -transform.right * Time.deltaTime * Speed :
+                              transform.right * Time.deltaTime * Speed;
+    }
+
+    protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("MONSTER"))
         {

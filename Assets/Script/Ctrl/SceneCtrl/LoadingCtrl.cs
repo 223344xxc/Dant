@@ -21,13 +21,14 @@ public class LoadingCtrl : MonoBehaviour
 
         SceneManager.LoadScene("Loading", LoadSceneMode.Additive);
         StopAllCoroutines();
-        StartCoroutine(Loading());
+        StartCoroutine(Loading()); 
     }
 
     IEnumerator Loading()
     {
-        //yield return new WaitForSeconds(2f);
-        while (!op.isDone)
+        float time = Time.time;
+
+        while (!op.isDone || Time.unscaledTime - time < 4)
         {
             yield return null;
         }
@@ -38,6 +39,7 @@ public class LoadingCtrl : MonoBehaviour
 
     public void EndLoading()
     {
+        MainCtrl.nowSceneLoauded = true;
         SceneManager.UnloadSceneAsync("Loading");
     }
 }

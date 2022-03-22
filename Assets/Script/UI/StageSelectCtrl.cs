@@ -10,6 +10,8 @@ public class StageSelectCtrl : MonoBehaviour
     private const float stageUiLength = 800;
     private int StageIndex = 0;
 
+    Vector3 inPos;
+
     private void Awake()
     {
         stageUi = GetComponent<RectTransform>();
@@ -24,6 +26,19 @@ public class StageSelectCtrl : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.A))
         {
             UiMove(false);
+        }
+
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            inPos = Input.mousePosition;
+        }
+        else if(Input.GetMouseButtonUp(0))
+        {
+            if ((inPos - Input.mousePosition).x > 100)
+                UiMove(true);
+            else if ((inPos - Input.mousePosition).x < -100)
+                UiMove(false);
         }
     }
 

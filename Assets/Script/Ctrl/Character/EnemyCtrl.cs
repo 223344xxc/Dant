@@ -12,25 +12,37 @@ public class EnemyCtrl : Ability
 
     [Header("적 능력치")]
     [SerializeField] private float PowerX, PowerY;
-    [SerializeField] private float trackingRadius;
-    [SerializeField] protected Vector3 trakingOffset; 
-
+    [SerializeField] protected float trackingRadius;
+    [SerializeField] protected Vector3 trakingOffset;
+    [SerializeField] protected float hitRadius;
     private bool IsMove = true;
     private bool IsGround = false;
+    private bool IsStun = false;
 
     [Tooltip("피격 이펙트 프리펩")]
     [SerializeField] private GameObject HitEffectPrefab;
     [SerializeField] private GameObject DeathEffectPrefab;
 
     [SerializeField] private Color HitColor;
+
+    public Action Over;
+
     private Color startColor;
 
     protected Vector3 StartScale;
     public Vector3 moveVel;
+
+
     public virtual Vector3 MoveVel
     {
         get
         {
+
+            if (IsStun)
+            {
+                return moveVel;
+            }
+
             var distance = Vector3.Distance(PlayerCtrl.Instance.transform.position, trakingOffset + transform.position);
 
             if (distance >= 1.5f && distance <= trackingRadius && !isDeath)
@@ -92,22 +104,39 @@ public class EnemyCtrl : Ability
         spriteRenderer.color = Color.Lerp(spriteRenderer.color, startColor, 0.05f);
     }
 
+    private void StunTime(float st)
+    {
+        CancelInvoke();
+        IsStun = true;
+        Invoke("SetStun", st);
+    }
+
+    private void SetStun()
+    {
+        IsStun = false ;
+    }
+
     public void Damaged_Enemy(int damage, float ImpulseForce = 0, Action Event=null)
     {
         Vector3 ImpulseDir = transform.position - PlayerCtrl.Instance.transform.position;
+        StunTime(0.1f);
         ImpulseDir.Set(ImpulseDir.x > 0 ? 500 * ImpulseForce : -500 * ImpulseForce, 0, 0);
+        moveVel.x = (PlayerCtrl.Instance.transform.position.x - transform.position.x < 0 ? 1 : -1) * 10;
 
-        rigidbody.AddForce(ImpulseDir);
         spriteRenderer.color = HitColor;
 
         Damaged(damage);
         Event?.Invoke();
         if (Hp > 0)
         {
+
             Destroy(Instantiate(HitEffectPrefab, transform), 1);
         }
         else
         {
+            Over?.Invoke();
+            rigidbody.AddForce(ImpulseDir);
+
             Destroy(Instantiate(HitEffectPrefab, transform), 1);
             Destroy(gameObject, 3);
         }
@@ -115,6 +144,7 @@ public class EnemyCtrl : Ability
     public override void Death()
     {
         base.Death();
+        PlayerCtrl.Instance.KillCount += 1;
         animator.Play("Death");
     }
 
@@ -142,7 +172,13 @@ public class EnemyCtrl : Ability
 
     private void Move()
     {
+        if (Vector3.Distance(PlayerCtrl.Instance.transform.position + PlayerCtrl.Instance.playerCenterOffset, trakingOffset + transform.position) < hitRadius)
+        {
+            Debug.Log("hit");
+            PlayerCtrl.Instance.Damaged(1);
+        }
         animator.SetFloat("MoveVel", Mathf.Abs(rigidbody.velocity.x));
+
         transform.localScale = MoveScale;
     }
 
@@ -170,6 +206,9 @@ public class EnemyCtrl : Ability
     {
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(trakingOffset + transform.position, trackingRadius);
+
+        Gizmos.color = Color.white;
+        Gizmos.DrawWireSphere(trakingOffset + transform.position, hitRadius);
     }
 #endif
 }

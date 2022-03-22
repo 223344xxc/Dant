@@ -7,7 +7,7 @@ public class MainCtrl : MonoBehaviour
 {
     LoadingCtrl loading;
     public static string NowScene = "StartScene";
-
+    public static bool nowSceneLoauded = true;
     void Start()
     {
         loading = GetComponent<LoadingCtrl>();
@@ -16,6 +16,7 @@ public class MainCtrl : MonoBehaviour
 
     public void LoadScene(string name)
     {
+        nowSceneLoauded = false;
         loading.StartLoading(name);
         NowScene = name;
     }

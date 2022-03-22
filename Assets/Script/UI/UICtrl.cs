@@ -16,8 +16,8 @@ public class UICtrl : MonoBehaviour
 
     [SerializeField] private Image fadeImage;
 
-    [SerializeField] private Sprite WinBackGround;
-    [SerializeField] private Sprite LoseBackGround;
+    [SerializeField] private GameObject WinText;
+    [SerializeField] private GameObject LoseText;
 
     private Dictionary<UiState, GameObject> UiList;
     private Text PlayerHpText;
@@ -27,12 +27,20 @@ public class UICtrl : MonoBehaviour
 
     [SerializeField] private Text minText;
     [SerializeField] private Text secText;
+    [SerializeField] private Text timeText;
+    [SerializeField] private Text maxCompoText;
+    [SerializeField] private Text AttacksText;
 
     [SerializeField] private static float timeSec;
 
     [SerializeField] private Color fadeColor;
+    [SerializeField] private Image[] flowerImage;
+    [SerializeField] private Sprite activeFlowerImage;
+    [SerializeField] private Sprite unActiveFlowerImage;
+
     public float fadeSpeed;
 
+    private bool StartedGame = false;
     public void Awake()
     {
         InitUi();
@@ -49,7 +57,7 @@ public class UICtrl : MonoBehaviour
         PlayerHpText = UiList[UiState.EndGame].transform.Find("EndGamePanel").transform.Find("Hart").transform.Find("HartCount").GetComponent<Text>();
         EndGameBackGround = UiList[UiState.EndGame].transform.Find("EndGamePanel").transform.Find("BackGround").GetComponent<Image>();
         main = GameObject.Find("Main").GetComponent<MainCtrl>();
-
+        Time.timeScale = 0;
     }
 
     private void AddUiDictionary(UiState uiState, string uiName)
@@ -85,8 +93,25 @@ public class UICtrl : MonoBehaviour
         switch (uiState)
         {
             case UiState.EndGame:
-                EndGameBackGround.sprite = PlayerCtrl.Instance.Hp > 0 ? WinBackGround : LoseBackGround;
+                if (PlayerCtrl.Instance.Hp > 0)
+                {
+                    WinText.SetActive(true);
+                    PlayerPrefs.SetFloat("Stage1_ClearTime", timeSec);
+                    PlayerPrefs.SetInt("Stage1_FlowerCount", PlayerCtrl.Instance.flowerCount);
+                }
+                else
+                    LoseText.SetActive(true);
+
+                timeText.text = "Time : " + minText.text + ":" + secText.text;
+                maxCompoText.text = "Max Combo : " + PlayerCtrl.Instance.MaxCombo; 
+                AttacksText.text = "Attacks : " + PlayerCtrl.Instance.KillCount;
+
                 PlayerHpText.text = "X " + PlayerCtrl.Instance.Hp;
+                for(int i = 0; i < PlayerCtrl.Instance.flowerCount; i++)
+                {
+                    flowerImage[i].sprite = activeFlowerImage;
+                }
+
                 break;
             default:
                 break;
@@ -102,11 +127,16 @@ public class UICtrl : MonoBehaviour
 
     public void Start()
     {
-        if (GameOption.IsGameState(GameState.None))
-            FadeOut();
+        //if (GameOption.IsGameState(GameState.None))
+        //    FadeOut();
     }
     public void Update()
     {
+        GameOption.GetGameState().LogError();
+        MainCtrl.nowSceneLoauded.LogError();
+        if (!StartedGame && MainCtrl.nowSceneLoauded)
+            FadeOut();
+
         if (!GameOption.IsGameState(GameState.Play))
             return;
         TimerUpdate();
@@ -131,6 +161,7 @@ public class UICtrl : MonoBehaviour
 
     public void FadeOut()
     {
+        StartedGame = true;
         fadeImage.enabled = true;
         StartCoroutine(FadeScreen(true));
     }
