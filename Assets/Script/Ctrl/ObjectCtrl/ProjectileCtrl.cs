@@ -8,7 +8,7 @@ public class ProjectileCtrl : MonoBehaviour
 
     protected virtual void Awake()
     {
-        Destroy(gameObject, 10);
+        Destroy(gameObject, 0.5f);
     }
 
     protected void Update()

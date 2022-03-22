@@ -10,6 +10,8 @@ public class HpBarCtrl : MonoBehaviour
 
     public void HpBarDamage(int hp)
     {
+        Debug.Log(1);
+
         if (hp == 0)
         {
             harts[hp].Delay = 0.1f;

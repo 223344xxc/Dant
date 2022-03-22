@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.UI;
 public enum AttackType
 {
     None,
@@ -18,6 +19,9 @@ public enum AttackType
 
 public class PlayerCtrl : PlayerAbility
 {
+    public Image ultiImage;
+    public Text coolText;
+
     private static PlayerCtrl instance;
     public static PlayerCtrl Instance => instance;
     public Vector3 playerCenterOffset;
@@ -29,6 +33,8 @@ public class PlayerCtrl : PlayerAbility
         set
         {
             combo = value;
+            if (MaxCombo < combo)
+                MaxCombo = combo;
             CancelInvoke("ComboReset");
             UpdatePlayerUI?.Invoke(this);
             Invoke("ComboReset", ComboResetTime);
@@ -37,6 +43,7 @@ public class PlayerCtrl : PlayerAbility
     public float ComboResetTime;
     public HpBarCtrl hpBar;
 
+    [SerializeField] private EnemyCtrl boss;
     [SerializeField] private GameObject TopAttackEffect;
     [SerializeField] private GameObject projectilePrefab;
 
@@ -53,8 +60,11 @@ public class PlayerCtrl : PlayerAbility
     private bool IsDash = false;
 
     private float DashDistance = 0;
+    public float KillCount = 0;
+    public float MaxCombo = 0;
     private bool PassibleMove = true;
     private bool IsJumpTopAttack = false;
+    public int flowerCount = 0;
 
     private Vector2 moveVector;
     public Vector2 MoveVector
@@ -74,8 +84,12 @@ public class PlayerCtrl : PlayerAbility
             if (Mathf.Abs(JoyStickCtrl.JoyStickPosition.x) > 3)
                 moveScale.Set(JoyStickCtrl.JoyStickPosition.x > 0 ? -1 * StartScale.x : 1 * StartScale.x, StartScale.y, StartScale.z);
 
+            if (isDeath)
+                moveVector = Vector3.zero;
+
             return moveVector;
         }
+        set => moveVector = value;
     }
 
     private Vector3 StartScale;
@@ -117,12 +131,30 @@ public class PlayerCtrl : PlayerAbility
     public Vector3 CirclePos;
     public float Radius;
 
+    public float ultiCool;
+    private float ultiTime = 0;
+
+    private bool jumpChack = true;
+
     public override void Awake()
     {
         InitPlayer();
+        boss.Over = gameOver;
     }
     public void Update()
     {
+        if(ultiTime > 0)
+        {
+            ultiTime -= Time.deltaTime;
+            coolText.text = ultiTime.ToString("f1");
+        }
+        else
+        {
+            ultiTime = 0;
+            coolText.text = "0";
+            ultiImage.color = new Color(1, 1, 1);
+        }
+
         PlayerMove();
         ChackGround();
     }
@@ -176,8 +208,7 @@ public class PlayerCtrl : PlayerAbility
     }
     private void PlayerRigidbodyUpdate()
     {
-        if (isDeath)
-            return;
+        
         rigid.velocity = MoveVector;
     }
     private void PlayerMove()
@@ -228,14 +259,21 @@ public class PlayerCtrl : PlayerAbility
 
         if (transform.position.y <= -20)
         {
-            transform.position = new Vector3(0, 5, 0);
-            Damaged(1);
+            if (Hp > 1)
+            {
+                Damaged(1);
+                transform.position = new Vector3(0, 8, 0);
+            }
+            else
+                Damaged(1);
         }
     }
     private void ChackGround()
     {
-        if (rigid.velocity.y < 0/* || (rigid.velocity.y <= 0 && IsJump == true)*/)
+        if (rigid.velocity.y < 0 || (rigid.velocity.y <= 0 && IsJump == true && jumpChack))
         {
+            "Chack".Log();
+
             RaycastHit2D[] groundhit = Physics2D.CircleCastAll(CirclePos + transform.position, Radius, Vector2.zero);
             for (int i = 0; i < groundhit.Length; i++)
             {
@@ -267,7 +305,7 @@ public class PlayerCtrl : PlayerAbility
     }
     public override void Damaged(int Damage)
     {
-        if (isInvincibility)
+        if (isDeath || isInvincibility)
             return;
         base.Damaged(Damage);
         hpBar.HpBarDamage(Hp);
@@ -342,22 +380,27 @@ public class PlayerCtrl : PlayerAbility
     #region 버튼 함수들
     public void Dash()
     {
+        if (isDeath)
+            return;
+
         if (!IsDash && PassibleMove)
             anim.Play("Dash");
     }
 
     public void Jump()
     {
-        if (IsJump)
+        if (IsJump || isDeath)
             return;
 
         rigid.AddForce(JumpVector);
+
+        JumpChackStop(0.1f);
         IsJump = true;
     }
 
     public void Attack()
     {
-        if (IsAttack || IsDash)
+        if (IsAttack || IsDash || isDeath)
             return;
 
         if (JoyStickCtrl.StickDirection == JoyStickDirection.UP && IsJump == false)
@@ -374,7 +417,7 @@ public class PlayerCtrl : PlayerAbility
 
     public void Skill()
     {
-        if (IsAttack || IsDash)
+        if (IsAttack || IsDash || isDeath)
             return;
 
         if (JoyStickCtrl.StickDirection == JoyStickDirection.DOWN && IsJump == false)
@@ -401,10 +444,13 @@ public class PlayerCtrl : PlayerAbility
     #region 코드에서 불리는 함수들
     public void Ultimate()
     {
-        if (IsAttack || IsDash)
+        if (ultiTime > 0 || IsAttack || IsDash || isDeath)
             return;
-
+        isInvincibility = true;
+        ultiImage.color = new Color(0.5f, 0.5f, 0.5f);
+        coolText.enabled = true;
         NowAttackType = AttackType.Ultimate;
+        ultiTime = ultiCool;
         anim.Play("Ultimate");
     }
     private void NormalAttack()
@@ -435,7 +481,8 @@ public class PlayerCtrl : PlayerAbility
         Effect.transform.localScale = DumyVector;
         IsJump = true;
         anim.Play("TopAttack");
-        rigid.AddForce(Vector2.up * 2000);
+        //rigid.AddForce(Vector2.up * 2000);
+        ForceJump(2000);
     }
     private void DownAttack()
     {
@@ -453,7 +500,8 @@ public class PlayerCtrl : PlayerAbility
             return;
         NowAttackType = AttackType.JumpTopAttack;
         IsJumpTopAttack = true;
-        rigid.AddForce(Vector2.up * 2000);
+        //rigid.AddForce(Vector2.up * 2000);
+        ForceJump(2000);
         anim.Play("JumpTopAttack");
 
     }
@@ -490,10 +538,12 @@ public class PlayerCtrl : PlayerAbility
     public void ForceJump(float Power)
     {
         IsJump = true;
+        JumpChackStop(0.1f);
         rigid.AddForce(Vector2.up * Power);
     }
     public void StartDash()
     {
+        isInvincibility = true;
         DashDistance = transform.localScale.x > 0 ? -1 : 1;
         PassibleMove = false;
         IsDash = true;
@@ -501,9 +551,15 @@ public class PlayerCtrl : PlayerAbility
 
     public void EndDash()
     {
+        isInvincibility = false;
         DashDistance = 0;
         PassibleMove = true;
         IsDash = false;
+    }
+
+    public void EndUltimate()
+    {
+        isInvincibility = false;
     }
 
     public void SetAttack()
@@ -545,10 +601,24 @@ public class PlayerCtrl : PlayerAbility
         {
             AttackToObject?.Invoke(AttackDamage, -2, () => Combo += 1);
         }
+        else if(NowAttackType == AttackType.Ultimate)
+        {
+            AttackToObject?.Invoke(AttackDamage + 1, 0.5f, () => Combo += 1);
+        }
         else
             AttackToObject?.Invoke(AttackDamage, 0.5f, () => Combo += 1);
     }
     #endregion
+
+    private void JumpChackStop(float Sec)
+    {
+        jumpChack = false;
+        Invoke("ResetJumpChack", Sec);
+    }
+    private void ResetJumpChack()
+    {
+        jumpChack = true;
+    }
 
     private void OnDrawGizmos()
     {
@@ -556,4 +626,5 @@ public class PlayerCtrl : PlayerAbility
 
         Gizmos.DrawSphere(transform.position + playerCenterOffset, 0.1f);
     }
+
 }

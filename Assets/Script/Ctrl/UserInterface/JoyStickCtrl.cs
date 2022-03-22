@@ -49,27 +49,9 @@ public class JoyStickCtrl : MonoBehaviour
 
     void Follow()
     {
-        if (StickFollow) 
-        {
+        ////조이스틱 pc 테스트
 
-            //TargetPos = (Input.mousePosition - (Vector3)StartStickPos).magnitude < MaxDistance ?
-            //    ((Vector2)Input.mousePosition - StartStickPos).normalized * ((Vector2)Input.mousePosition - StartStickPos).magnitude :
-            //    ((Vector2)Input.mousePosition - StartStickPos).normalized * MaxDistance;
-            //transform.position = Vector3.SmoothDamp(transform.position, TargetPos + StartStickPos, ref movevel, StickSpeed);
-            if (Input.touchCount > 0)
-            {
-                TargetPos = (Input.GetTouch(0).position - StartStickPos).magnitude < MaxDistance ?
-                    (Input.GetTouch(0).position - StartStickPos).normalized * (Input.GetTouch(0).position - StartStickPos).magnitude :
-                    (Input.GetTouch(0).position - StartStickPos).normalized * MaxDistance;
-                transform.position = Vector3.SmoothDamp(transform.position, TargetPos + StartStickPos, ref movevel, StickSpeed);
-            }
-
-        }
-        else
-        {
-            transform.position = Vector3.SmoothDamp(transform.position, StartStickPos, ref movevel, StickSpeed);
-        }
-        //조이스틱 pc 테스트
+#if UNITY_EDITOR
         if (Input.GetKey(KeyCode.D))
         {
             transform.position = StartStickPos + new Vector2(100, 0);
@@ -92,6 +74,28 @@ public class JoyStickCtrl : MonoBehaviour
         }
         else
             StickFollow = false;
+#endif
+        if (StickFollow) 
+        {
+
+            //TargetPos = (Input.mousePosition - (Vector3)StartStickPos).magnitude < MaxDistance ?
+            //    ((Vector2)Input.mousePosition - StartStickPos).normalized * ((Vector2)Input.mousePosition - StartStickPos).magnitude :
+            //    ((Vector2)Input.mousePosition - StartStickPos).normalized * MaxDistance;
+            //transform.position = Vector3.SmoothDamp(transform.position, TargetPos + StartStickPos, ref movevel, StickSpeed);
+            if (Input.touchCount > 0)
+            {
+                TargetPos = (Input.GetTouch(0).position - StartStickPos).magnitude < MaxDistance ?
+                    (Input.GetTouch(0).position - StartStickPos).normalized * (Input.GetTouch(0).position - StartStickPos).magnitude :
+                    (Input.GetTouch(0).position - StartStickPos).normalized * MaxDistance;
+                transform.position = Vector3.SmoothDamp(transform.position, TargetPos + StartStickPos, ref movevel, StickSpeed);
+            }
+
+        }
+        else
+        {
+            transform.position = Vector3.SmoothDamp(transform.position, StartStickPos, ref movevel, StickSpeed);
+        }
+   
 
         JoyStickPosition = transform.position - (Vector3)StartStickPos;
 

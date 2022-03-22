@@ -21,14 +21,14 @@ public class LoadingCtrl : MonoBehaviour
 
         SceneManager.LoadScene("Loading", LoadSceneMode.Additive);
         StopAllCoroutines();
-        StartCoroutine(Loading());
+        StartCoroutine(Loading()); 
     }
 
     IEnumerator Loading()
     {
         float time = Time.time;
-       
-        while (!op.isDone || Time.unscaledTime - time < 3)
+
+        while (!op.isDone || Time.unscaledTime - time < 4)
         {
             yield return null;
         }
